@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-slug: /rn
+slug: /ponderadas
 title: "Projetos com Mobile"
 ---
 
