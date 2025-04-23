@@ -9,10 +9,10 @@ const config: Config = {
   favicon: 'img/firelink.png',
 
   url: 'https://firelink-library.github.io',
-  baseUrl: '/docusaurus-template',
+  baseUrl: '/mobile',
 
   organizationName: 'Firelink Library',
-  projectName: 'docusaurus-template',
+  projectName: 'Mobile',
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -57,7 +57,7 @@ const config: Config = {
     // Replace with your project's social card
     image: 'img/docusaurus-social-card.jpg',
     navbar: {
-      title: 'Template docusaurus',
+      title: 'Mobile',
       logo: {
         alt: 'Logo Firelink Lib.',
         src: 'img/firelink.png',
@@ -70,7 +70,7 @@ const config: Config = {
           label: 'Tutorial',
         },
         {
-          href: 'https://github.com/firelink-library/docusaurus-template',
+          href: 'https://github.com/firelink-library/mobile',
           label: 'GitHub',
           position: 'right',
         },
@@ -80,7 +80,7 @@ const config: Config = {
       style: 'dark',
       links: [],
       copyright: `Copyright © ${new Date().getFullYear()} Firelink Library.
-          Built with Docusaurus.`,
+          Built with Docusaurus, ❤️ and ☕️.`,
     },
     prism: {
       theme: prismThemes.github,
