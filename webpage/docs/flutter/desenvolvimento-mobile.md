@@ -1,5 +1,5 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
 title: Desenvolvimento Mobile Com Flutter
 slug: /flutter/desenvolvimento-mobile
 ---
@@ -35,7 +35,7 @@ Na sequencia pessoal, vou deixar mais um material informativo a respeito da evol
             width: '100%',
             height: '50vh',
             marginBottom: '24px'
-        }}  src="https://www.youtube.com/embed/MnrJzXM7a6o?si=bPj2Ns7hab_cTjic" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        }}  src="https://www.youtube.com/embed/MnrJzXM7a6o?si=bPj2Ns7hab_cTjic" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto', height: '40vh', width: '50vw' }}></iframe>
 <br />
 
 <iframe style={{
@@ -44,7 +44,7 @@ Na sequencia pessoal, vou deixar mais um material informativo a respeito da evol
             width: '100%',
             height: '50vh',
             marginBottom: '24px'
-        }}  src="https://www.youtube.com/embed/l7eucqQMXDw?si=jkuEo1ehyf7puw7_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        }}  src="https://www.youtube.com/embed/l7eucqQMXDw?si=jkuEo1ehyf7puw7_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto', height: '40vh', width: '50vw' }}></iframe>
 
 <iframe style={{
             display: 'block',
@@ -52,7 +52,7 @@ Na sequencia pessoal, vou deixar mais um material informativo a respeito da evol
             width: '100%',
             height: '50vh',
             marginBottom: '24px'
-        }}  src="https://www.youtube.com/embed/5K4pEk19nhs?si=8QcpTQMvRpNd9DA8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        }}  src="https://www.youtube.com/embed/5K4pEk19nhs?si=8QcpTQMvRpNd9DA8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto', height: '40vh', width: '50vw' }}></iframe>
 <br />
 
 <iframe style={{
@@ -61,5 +61,5 @@ Na sequencia pessoal, vou deixar mais um material informativo a respeito da evol
             width: '100%',
             height: '50vh',
             marginBottom: '24px'
-        }}  src="https://www.youtube.com/embed/xLMP4ro14fo?si=RXb5C5mXZL6njsAP" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        }}  src="https://www.youtube.com/embed/xLMP4ro14fo?si=RXb5C5mXZL6njsAP" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{ display: 'block', marginLeft: 'auto', marginRight: 'auto', height: '40vh', width: '50vw' }}></iframe>
 <br />
