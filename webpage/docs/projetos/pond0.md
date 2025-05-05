@@ -114,7 +114,11 @@ Aqui será descrito quais critérios de aceite para a solução submetido.
 
 | Faixa de Valor | Descrição         | Comentários Gerais |
 |----------------|-------------------|--------------------|
-| 0 - 1 | Não iniciou o projeto | Não foi iniciado o projeto ou não foi entregue. Ou ainda |
+| 0 - 1 | Não iniciou o projeto | Não foi iniciado o projeto ou não foi entregue. Ou ainda o projeto não tem nada além do template inicial do projeto. |
+| 1,1 - 5 | Iniciou o projeto | O projeto foi iniciado, mas não tem a maioria das funcionalidades implementadas. Ou ainda o projeto não tem a funcionalidades corretamente implementadas. |
+| 5,1 - 8 | Projeto em andamento | O projeto está em andamento, mas ainda faltam implementar algumas das funcionalidades essenciais para o seu pleno funcionamento. Tudo que foi implementado está devidamente funcional. |
+| 8,1 - 9 | Projeto em fase de finalização | O projeto está em fase de finalização, faltando apenas alguns detalhes para o seu pleno funcionamento. Tudo que foi implementado está devidamente funcional. |
+| 9,1 - 10 | Projeto finalizado | O projeto está finalizado, tudo que está implementado funciona corretamente. |
 
 ## Sugestão de Material de Consulta
 
