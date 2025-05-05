@@ -126,3 +126,18 @@ Aqui será descrito quais critérios de aceite para a solução submetido.
 - [Afinal, o que é Design System?](https://brasil.uxdesign.cc/afinal-o-que-%C3%A9-design-system-448c257b0021)
 - [Fakerjs](https://fakerjs.dev/)
 - [`{JSON} Placeholder`](https://jsonplaceholder.typicode.com/)
+- [Documentação do React Native](https://reactnative.dev/docs/getting-started)
+
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/obH0Po_RdWk?si=vqxHvk_1Et9Nt3iZ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}></iframe>
+<br />
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/sm5Y7Vtuihg?si=47KDaAMemP5CabJx" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}></iframe>
+<br />
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bGjNB12uaNw?si=N_Cs-wVKCsQ0nEf0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}></iframe>
+<br />
+
