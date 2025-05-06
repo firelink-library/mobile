@@ -11,7 +11,7 @@ Lembrem, você podem e devem mandar eventuais dúvidas e conquistas que vocês t
 
 ## 1. Configuração do Ambiente de Desenvolvimento
 
-:::warning Dica do professor Linguine 🤓☝
+:::warning[Dica do professor Linguine 🤓☝]
 Caso o seu querido computador possuir um firewall que não deva ser desligado e que bloqueie a exposição de serviços na rede, o **Expo Go** (versão para acessar o app diretamente do celular) pode não funcionar corretamente. Nesses casos, recomenda-se o uso de um sistema operacional que permita contornar essas restrições, como o **Ubuntu**.
 :::
 
@@ -34,6 +34,30 @@ Calma meu amigo e minha amiga! Vocês estão corretos, mas o Android Studio, al�
 - Link Android Studio: [site oficial](https://developer.android.com/studio?hl=pt-br)
 
 No momento que eu estou escrevendo este artigo (2025-05-05), a versão estável mais recente do Android Studio é a versão `2024.3.1 Patch 2`. Fazer o downland e a instalação dele. Para o download, apenas verificar a versão que é compatível com seu sistema operacional.
+
+No momento da instalação, deixar selecionado que além do Android Studio, desejamos instalar um `Android Virtual Device` (esse é o principal motivo de estarmos realizando está instalação). Terminada a instalação, execute o Android Studio pela primeira vez. Na tela `Install Type`, selecionar `Custom`, para verificar quais elementos serão instalados juntos ao sistema. Verificar que o `Android Virtual Device` está selecionado e, para quem estiver utilizando o sistema operacional Windows (se não me engano é apenas nele), que a opção `Performance (Android Emulator hypervisor driver)` também está instalada. Você será apresentado ao License Agreement para utilizar o sistema e um novo download irá acontecer.
+
+Uma vez que o Android Studio tiver terminado de baixar todos os pacotes necessários, é hora de lançar o emulador. Para isso selecionar `More Actions` e selecionar `Virtual Device Manager`.
+
+<img
+  src={require('/img/instalacao/iniciar-avd-manager.png').default}
+  alt="Tela de Notificações"
+  style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
+/>
+<br />
+
+Nesta tela, podemos criar um novo dispositivo (pequeno sinal de `+` no canto superior esquerdo da tela) e lançar os dispositivos já criados. Neste caso, vou iniciar o dispositivo que foi criado junto a instalação do Android Studio. Basta clicar no botão de `play` ao lado do dispositivo.
+
+<img
+  src={require('/img/instalacao/emulador-android.png').default}
+  alt="Tela de Notificações"
+  style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
+/>
+<br />
+
+Agora temos nosso emulador pronto para utilizar 🤖🎉☕!
+
+
 
 ### 1.2 Instalação do nvm
 
@@ -58,7 +82,78 @@ nvm use --lts
 node -version
 ```
 
-Agora estamos prontos para iniciar o desenvolvimento!
+Agora estamos prontos para iniciar o desenvolvimento! Vamos testar nosso `ola mundo`.
 
+<img src='https://media.tenor.com/AlLJYGZ8YrYAAAAM/ready-to-go-spongebob.gif' alt='Bob esponja dizendo que está pronto'
+style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }} />
 
+## 2. Executando Primeiro Programa
 
+Agora vamos executar nosso primeiro programa! Para isso, vamos realizar algumas ações. A primeira delas, vamos verificar se o nosso emulador está rodando.
+
+> "Mas Murilão eu quero testar no meu dispositivo! Tem problema?"
+
+De forma alguma! Recomendo fazer o teste no emulador para garantir que você tem um forma de testar seus aplicativos apenas utilizando seu computador de desenvolvimento e também porque as vezes ... seu celular não estará com você, ele pode estar em terras longínquas, como o outro lado da sala.
+
+:::note[Aplicativo Expo Go]
+
+Pessoal quem for testar no seu próprio dispositivo, será necessário utilizar um aplicativo chamado `Expo Go`. Ele está disponível para o Android e para o iOS nas lojas respectivas de cada sistema operacional. Aqui, temos um detalhe bastante interessante: o funcionamento do Expo Go. O que o aplicativo faz é realizar o download do bundle JS do aplicativo que estamos desenvolvendo. Ele realiza essa ação baixando os dados para cache local do aplicativo. ***IMPORTANTE:*** para que este fluxo funcione, tanto o computador de desenvolvimento quanto o dispositivo precisam estar na mesma rede local.
+
+<img src='https://retool.com/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fbclf52sw%2Fproduction%2F45f62b4cbf30f60d8be42ef7b9f7973f0c204844-1400x494.webp&w=3840&q=75' alt='Fluxo de download do aplicativo para o Expo Go'
+style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }} />
+
+Não existe um tempo de validade específico para o cache do Expo Go, portanto, uma vez baixado, o aplicativo pode ser utilizado mesmo que o servidor de desenvolvimento tenha sido desligado. ***CUIDADO:*** Isso não é equivalente a baixar o aplicativo, é apenas uma forma de testar algumas interações com ele. Vamos compilar o aplicativo posteriormente.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/vFW_TxKLyrE?si=bvWhENtPiCxrm9zm" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen
+style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}></iframe>
+
+:::
+
+Primeiro, vamos estudar como criar nossos aplicativos utilizando JavaScript, depois vamos verificar como mudar para TypeScript e outras coisas. Vamos focar agora nos primeiros elementos para realizar está criação. No terminal, utilizar o comando:
+
+```sh
+npx create-expo-app ola-mundo --template blank
+```
+
+O que fizemos aqui foi criar um diretório chamado `ola-mundo` que vai armazenar nosso projeto. Outro ponto importante de se observar: `--template blank`, o que está flag está dizendo é que desejamos utilizar o template de JavaScript do React Native. Para ver mais templates disponíveis, verificar [aqui](https://docs.expo.dev/more/create-expo/). 
+
+:::danger[Cuidado quando com controle de versão]
+
+Por padrão, os projetos criados com o Expo trazem o controle de versão com o Git. Isso é muito bom, mas também traz um cuidado adicional quando o projeto for adicionado em um repositório já existente. A utilização de [`submodules`](https://github.blog/open-source/git/working-with-submodules/) é muito boa quando trabalhamos com projetos em repositórios distintos. Minha recomendação, quando for utilizar o projeto dentro de outro repositório, é apenas remover o diretório `.git` do projeto criado com o Expo. 
+
+:::
+
+Antes de verificarmos a estrutura do nosso projeto, vamos verificar se ele está funcionando! Para isso, vamos utilizar os seguintes comandos:
+
+```sh
+# Entrar do diretório do projeto
+cd ola-mundo
+# Iniciar o servidor de desenvolvimento
+npx expo start
+```
+
+Isso vai lançar o servidor de desenvolvimento. Agora, você vai ver que vai aparecer um QrCode na tela do seu terminal. Esse QrCode pode ser escaneado com a camera de dispositivo físico para iniciar o download do bundle para dentro do aplicativo Expo Go.
+
+<img
+  src={require('/img/instalacao/npx-start.png').default}
+  alt="Tela de Notificações"
+  style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
+/>
+<br />
+
+É possível observar que existem algumas opções abaixo do QrCode. Vamos utilizar algumas delas agora. A primeira, vai ser a opção de pressionar a tecla `a` para lançar nossa aplicação dentro do emulador Android. Isso vai fazer o Expo Go ser baixado dentro do emulador e nossa aplicação ser enviada para ele. E em alguns instantes, vamos ver nossa aplicação rodando no emulador.
+
+<img
+  src={require('/img/instalacao/primeiro-app-rodando-emulador.png').default}
+  alt="Tela de Notificações"
+  style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
+/>
+<br />
+
+Parabéns🎉🎉☕🎉🎉! Seu primeiro aplicativo está sendo executado. Vamos estudar agora o que está acontecendo e como isso foi possível!
+
+<img
+  src='https://i.programmerhumor.io/2025/04/3522e08522f43f2f163d7d93c486b7b3998bd615253fb0201f9c2f5e43d16115.png' alt="Tela de Notificações"
+  style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
+/>
+<br />
