@@ -29,4 +29,32 @@ Calma meu amigo e minha amiga! Vocês estão corretos, mas o Android Studio, al�
 
 - Link Android Studio: [site oficial](https://developer.android.com/studio?hl=pt-br)
 
-No momento que eu estou escrevendo este artigo (2025-05-05), a versão estável mais recente do Android Studio é a versão `2024.3.1 Patch 2`.
+No momento que eu estou escrevendo este artigo (2025-05-05), a versão estável mais recente do Android Studio é a versão `2024.3.1 Patch 2`. Fazer o downland e a instalação dele. Para o download, apenas verificar a versão que é compatível com seu sistema operacional.
+
+### 1.2 Instalação do nvm
+
+O `nvm` - Node Version Manager, é uma maneira de instalar o `Node.js` que possibilita gerenciar diferentes versões em nosso sistema operacional. Por que isso é importante? Pois diferentes versões de requisitos são geralmente uma demanda quanto trabalhamos com diferentes projetos com o `Node.js`, desta forma temos uma maneira de gerenciar essas diferentes instalações em nosso sistema operacional.
+
+Primeiro, vamos no site do projeto para realizar sua download e instalação. Site oficial [aqui](https://github.com/nvm-sh/nvm).
+
+:::note[Para o Windows]
+
+A solução foi desenvolvida para sistema UNIX. A primeira solução é utilizar ele dentro do WSL, quando estiver no sistema Windows. Outra alternativa, é verificar o projeto [*NVM for Windows*](https://github.com/coreybutler/nvm-windows).
+
+:::
+
+Para fazer a instalação do versão necessária do `Node.js`, que pelo site do React Native é para utilizarmos uma versão LTS mais recente, vamos utilizar os comandos:
+
+```sh
+# Instala a última versão LTS
+nvm install --lts
+# Configura ela como a versão atual do Node
+nvm use --lts
+# Verifica se a versão correta foi instalada
+node -version
+```
+
+Agora estamos prontos para iniciar o desenvolvimento!
+
+
+
