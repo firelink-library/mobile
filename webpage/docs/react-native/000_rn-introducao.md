@@ -157,3 +157,52 @@ Parabéns🎉🎉☕🎉🎉! Seu primeiro aplicativo está sendo executado. Vam
   style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
 />
 <br />
+
+## 3. Estrutura de Arquivos e Componentes Fundamentais
+
+Agora vamos analisar a nossa estrutura de diretórios e arquivos do projeto. Cada tipo de template traz uma estrutura de diretórios e arquivos diferente, diante dos recursos que ele apresenta para a aplicação. Aqui estamos analisando a estrutura do nosso projeto `ola-mundo`, que utilizou o template `blank`.
+
+<img
+  src={require('/img/instalacao/estrutura-pastas.png').default}
+  alt="Tela de Notificações"
+  style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
+/>
+<br />
+
+Qual a função de cada um destes arquivos:
+
+- `.expo`: Este diretório é criado e gerenciado pelo Expo CLI. Ele contém arquivos de cache e configuração interna que o Expo usa para otimizar o processo de build e execução do seu aplicativo. Geralmente, você não precisa mexer nesses arquivos diretamente.
+- `assets`: Este diretório é o local padrão para armazenar recursos estáticos do seu aplicativo, como imagens (.png, .jpg, etc.), fontes personalizadas e outros arquivos multimídia que você usará no seu projeto. É uma convenção comum, embora você possa carregar assets de outros locais, organizar seus recursos aqui torna o projeto mais organizado. O template blank já vem com alguns exemplos de imagens de ícone e splash screen aqui dentro.
+- `node_modeles`: Aqui fica a internet toda 🫠. Brincadeira, este diretório é criado pelo gerenciador de pacotes que você usou para criar o projeto (npm ou yarn). Ele contém todas as bibliotecas e dependências do seu projeto, incluindo React, React Native, Expo SDK e quaisquer outras bibliotecas que você instalar. Este diretório geralmente não deve ser versionado em sistemas de controle como o Git, por isso ele é listado no arquivo .gitignore.
+- `.gitignore`: Este arquivo é usado pelo sistema de controle de versão Git para especificar quais arquivos e diretórios devem ser ignorados e não incluídos no repositório. Ele lista itens como a pasta node_modules, arquivos de log, cache, e outros arquivos gerados automaticamente que não precisam ser rastreados no histórico de versão do código.
+- `App.js`: Este é o ponto de entrada principal do seu aplicativo React Native. É aqui que você começará a escrever o código da interface do usuário do seu aplicativo. No template blank, este arquivo geralmente contém um componente React funcional simples que exibe algum texto básico na tela. É o arquivo que você mais modificará no início para construir a UI do seu app.
+- `app.json`: Este arquivo é o arquivo de configuração do seu aplicativo Expo. Ele contém metadados e configurações importantes para o seu projeto, como o nome do aplicativo, a versão, o ícone, a splash screen, a orientação da tela, permissões, configurações específicas por plataforma (iOS/Android) e as configurações do Expo SDK. Quando você constrói a versão final do seu app (build standalone) usando o Expo, muitas dessas configurações são lidas a partir deste arquivo.
+- `index.js`: Este arquivo é um pequeno script (geralmente muito curto) que registra o ponto de entrada do seu aplicativo (App.js) no sistema do React Native/Expo. Ele diz ao runtime do React Native para carregar e rodar o componente App definido em App.js. Em projetos Expo, este arquivo é padrão e você raramente precisará modificá-lo.
+- `package.json`: Este é o manifesto do seu projeto. Ele contém informações sobre o projeto, como nome, versão, descrição, autor, licença, e, o mais importante, lista as dependências diretas do seu projeto (dependencies e devDependencies) e scripts customizados que você pode rodar (como npm start, npm install, etc.). É aqui que você adicionará novas bibliotecas ao seu projeto (usando npm install <biblioteca> ou yarn add <biblioteca>) e elas serão listadas automaticamente.
+- `package-lock.json`: Este arquivo é gerado automaticamente pelo gerenciador de pacotes (npm gera package-lock.json, yarn gera yarn.lock). Ele registra as versões exatas de todas as dependências (incluindo as sub-dependências dentro de node_modules) que foram instaladas. Isso garante que qualquer pessoa que clone seu repositório e rode npm install ou yarn install obtenha exatamente as mesmas versões de bibliotecas que você usou, evitando problemas de compatibilidade. Este arquivo deve ser versionado no Git.
+
+Em geral, vamos trabalhar com o arquivo `App.js` hoje. Por isso, vamos analisar o que ele faz:
+
+```js
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text>Open up App.js to start working on your app!</Text>
+      <StatusBar style="auto" />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
+```
