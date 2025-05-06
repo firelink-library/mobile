@@ -163,8 +163,8 @@ Parabéns🎉🎉☕🎉🎉! Seu primeiro aplicativo está sendo executado. Vam
 Agora vamos analisar a nossa estrutura de diretórios e arquivos do projeto. Cada tipo de template traz uma estrutura de diretórios e arquivos diferente, diante dos recursos que ele apresenta para a aplicação. Aqui estamos analisando a estrutura do nosso projeto `ola-mundo`, que utilizou o template `blank`.
 
 <img
-  src={require('/img/instalacao/estrutura-pastas.png').default}
-  alt="Tela de Notificações"
+  src={require('/img/instalacao/estrutura-pastas.png').default} 
+  alt="Tela de Notificações" 
   style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
 />
 <br />
@@ -178,7 +178,7 @@ Qual a função de cada um destes arquivos:
 - `App.js`: Este é o ponto de entrada principal do seu aplicativo React Native. É aqui que você começará a escrever o código da interface do usuário do seu aplicativo. No template blank, este arquivo geralmente contém um componente React funcional simples que exibe algum texto básico na tela. É o arquivo que você mais modificará no início para construir a UI do seu app.
 - `app.json`: Este arquivo é o arquivo de configuração do seu aplicativo Expo. Ele contém metadados e configurações importantes para o seu projeto, como o nome do aplicativo, a versão, o ícone, a splash screen, a orientação da tela, permissões, configurações específicas por plataforma (iOS/Android) e as configurações do Expo SDK. Quando você constrói a versão final do seu app (build standalone) usando o Expo, muitas dessas configurações são lidas a partir deste arquivo.
 - `index.js`: Este arquivo é um pequeno script (geralmente muito curto) que registra o ponto de entrada do seu aplicativo (App.js) no sistema do React Native/Expo. Ele diz ao runtime do React Native para carregar e rodar o componente App definido em App.js. Em projetos Expo, este arquivo é padrão e você raramente precisará modificá-lo.
-- `package.json`: Este é o manifesto do seu projeto. Ele contém informações sobre o projeto, como nome, versão, descrição, autor, licença, e, o mais importante, lista as dependências diretas do seu projeto (dependencies e devDependencies) e scripts customizados que você pode rodar (como npm start, npm install, etc.). É aqui que você adicionará novas bibliotecas ao seu projeto (usando npm install <biblioteca> ou yarn add <biblioteca>) e elas serão listadas automaticamente.
+- `package.json`: Este é o manifesto do seu projeto. Ele contém informações sobre o projeto, como nome, versão, descrição, autor, licença, e, o mais importante, lista as dependências diretas do seu projeto (dependencies e devDependencies) e scripts customizados que você pode rodar (como npm start, npm install, etc.). É aqui que você adicionará novas bibliotecas ao seu projeto (usando `npm install biblioteca`> ou `yarn add biblioteca`) e elas serão listadas automaticamente.
 - `package-lock.json`: Este arquivo é gerado automaticamente pelo gerenciador de pacotes (npm gera package-lock.json, yarn gera yarn.lock). Ele registra as versões exatas de todas as dependências (incluindo as sub-dependências dentro de node_modules) que foram instaladas. Isso garante que qualquer pessoa que clone seu repositório e rode npm install ou yarn install obtenha exatamente as mesmas versões de bibliotecas que você usou, evitando problemas de compatibilidade. Este arquivo deve ser versionado no Git.
 
 Em geral, vamos trabalhar com o arquivo `App.js` hoje. Por isso, vamos analisar o que ele faz:
@@ -206,3 +206,21 @@ const styles = StyleSheet.create({
 });
 
 ```
+
+Agora vamos analisar um pouco dos elementos que estão sendo utilizados. Todos os elementos que são utilizados na construção da interface da nossa aplicação são chamados de `Componentes`. Estes componentes podem ser de três categorias:
+
+- **Componentes Fundamentais (Core Components):** Os componentes básicos são chamados de Core Components, são os componentes já presentes no React Native;
+- **Componentes da Comunidade (Community Components):** São os componentes desenvolvidos por bibliotecas externas para utilização nos projetos;
+- **Seus Componentes Nativos (Your Native Componentes):** São componentes escritos pelo programador para utilizar o sistema nativo.
+
+<img
+  src='https://reactnative.dev/docs/assets/diagram_react-native-components_dark.svg'
+  alt="Tela de Notificações" 
+  style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
+/>
+<br />
+
+Mais informações sobre os componentes podem ser encontradas na [documentação](https://reactnative.dev/docs/intro-react-native-components).
+
+
+
