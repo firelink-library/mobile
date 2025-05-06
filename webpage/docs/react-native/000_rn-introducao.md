@@ -11,6 +11,10 @@ Lembrem, você podem e devem mandar eventuais dúvidas e conquistas que vocês t
 
 ## 1. Configuração do Ambiente de Desenvolvimento
 
+:::warning Dica do professor Linguine 🤓☝
+Caso o seu querido computador possuir um firewall que não deva ser desligado e que bloqueie a exposição de serviços na rede, o **Expo Go** (versão para acessar o app diretamente do celular) pode não funcionar corretamente. Nesses casos, recomenda-se o uso de um sistema operacional que permita contornar essas restrições, como o **Ubuntu**.
+:::
+
 Pessoal para iniciarmos o nosso desenvolvimento com o React Native, primeiro precisamos de alguns elementos configurados em nossa máquina. Primeiro é importante lembrar que vamos utilizar o Expo CLI para fazer nosso desenvolvimento.
 
 > "Mas Murilão, qual o impacto disso?"
