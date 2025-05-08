@@ -92,7 +92,6 @@ export function HeaderApp() {
 const estilos = StyleSheet.create(
     {
         header: {
-            flex: 1,
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -111,7 +110,327 @@ Logo, nosso `App.js` fica assim:
 
 ```js
 // App.js
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, SafeAreaView} from 'react-native';
+import { MainScreen } from './app/MainScreen';
+import { HeaderApp } from './components/HeaderApp';
+
+export default function App() {
+  return (
+    <SafeAreaView style={{flex:1}}>
+      <HeaderApp></HeaderApp>
+      <MainScreen></MainScreen>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 
 ```
 
+E vamos ajustar também o nosso `MainScreen.js`:
+
+```js
+// MainScreen.js
+import { Text,View } from 'react-native';
+
+
+export function MainScreen(){
+    return (
+        <View style={{flex:1, backgroundColor: '#fff',}}>
+            <Text>Ola Mundo Diferente!</Text>
+        </View>
+    );
+}
+```
+
+Beleza, temos agora nosso aplicativo funcionando com nosso Header e nossa Tela principal. Agora vamos dar uma melhorada em cada um deles. Vamos primeiro escolher qual imagem vamos utilizar de icone da nossa aplicação, que tal essa?
+
+<img
+  src='https://i.pinimg.com/736x/41/fb/be/41fbbebc8bcdd1f470e20e6ae2178334.jpg'
+  alt="Tela de Notificações"
+  style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
+/>
+<br />
+
+Vamos salvar essa imagem dentro do diretório `assets/images`, com o nome: `reiDadoLogo.jpg`. Agora vamos adicionar essa imagem dentro do nosso Header.
+
+```js
+import { View, Text, Image, StyleSheet } from 'react-native';
+
+export function HeaderApp() {
+    return (
+        <View style={estilos.header}>
+            <Image source={require('../assets/images/reiDadoLogo.jpg')} style={estilos.imagemLogo}/>
+            <Text>Lançador D6</Text>
+        </View>
+    );
+}
+
+const estilos = StyleSheet.create(
+    {
+        header: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+            backgroundColor: '#f8f8f8',
+            height: 64
+        },
+        imagemLogo:{
+            height:48,
+            width:48,
+            contentFit: 'contain',
+            padding:4,
+        }
+    }
+);
+```
+
+Boa! Agora temos nosso logo!!
+
+:::note[require]
+
+O `require` que estamos utilizando aqui serve para indicar ao empacotador (bundler que junta todos nossos arquivos JavaScript e demais recursos para o aplicativo), que o recurso que ele está utilizando é local e deve ser incluindo no conjunto de arquivos que estará disponível no aplicativo.
+
+Este método retorna um identificador que indica onde está a imagem que está sendo utilizada, dentro do conjunto de arquivos.
+
+:::
+
+Agora vamos fazer alguns ajustes no nosso Header:
+
+```js
+// HeaderApp.js
+import { View, Text, Image, StyleSheet } from 'react-native';
+
+export function HeaderApp() {
+    return (
+        <View style={estilos.header}>
+            <Image source={require('../assets/images/reiDadoLogo.jpg')} style={estilos.imagemLogo}/>
+            <Text style={estilos.headerText}>Lançador D6</Text>
+        </View>
+    );
+}
+
+const estilos = StyleSheet.create(
+    {
+        header: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: 16,
+            paddingVertical: 8,
+            backgroundColor: '#f8f8f8',
+            height: 64,
+            backgroundColor: '#ef1111'
+        },
+        imagemLogo:{
+            height:48,
+            width:48,
+            contentFit: 'contain',
+            padding:4,
+            borderRadius: 24,
+            overflow:'hidden',
+        },
+        headerText : {
+            fontSize: 30,
+            color: '#ececec',
+            fontWeight: 'bold',
+        }
+    }
+);
+```
+
+Pronto, agora temos nosso Header! Vamos agora trabalhar nos componentes da nossa tela.
+
+## 3. Componentes da Tela
+
+Para os componentes de nossa tela, vamos adicionar os elementos para fazer um lançamento de dados quando um botão for acionado. Vamos adicionar as imagens para o dado. 
+
+<img
+  src='data:image/png;base64,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'
+  alt="Tela de Notificações"
+  style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
+/>
+<br />
+
+Agora vamos ajustar nosso código:
+
+```js
+import { Text,View,Image,StyleSheet,TouchableOpacity } from 'react-native';
+
+
+export function MainScreen(){
+    return (
+        <View style={estilos.container}>
+            <Image source={require('../assets/images/dados_00.png')} style={estilos.image}/>
+            <TouchableOpacity style={estilos.botaoContainer}>
+                <Text style={estilos.botaoTexto}>Rolar!</Text>
+            </TouchableOpacity>
+        </View>
+    );
+}
+
+const estilos = StyleSheet.create(
+    {
+        container:{
+            flex: 1,
+            backgroundColor: '#ececec',
+            justifyContent: 'space-evenly',
+            alignContent: 'center',
+            alignItems: 'center'
+        },
+        image:{
+            height:'80%',
+            width:'80%',
+            resizeMode: 'contain',
+            padding:4,
+            borderRadius: '35%',
+            overflow:'hidden',
+        },
+        botaoContainer:{
+            backgroundColor: '#007bff',
+            width: '80%',
+            paddingVertical: 12,
+            paddingHorizontal: 25,
+            borderRadius: 8,
+            elevation: 2,
+            marginBottom: 15,
+        },
+        botaoTexto:{
+            fontSize: 20,
+            color: '#ececec',
+            fontWeight: 'bold',
+            textAlign: 'center',
+        },
+    }
+);
+```
+
+Muitas coisas aqui:
+- Criamos um `TouchableOpacity` para criar um elemento clicável. Assim, conseguimos ajustar seu formato da maneira que desejarmos.
+
+Agora vamos ajustar a lógica para sortear nosso botão. As imagens que vamos utilizar:
+
+<img
+  src='https://cdn-icons-png.flaticon.com/512/10877/10877983.png'
+  alt="Tela de Notificações"
+  style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
+/>
+<br />
+<img
+  src='https://cdn-icons-png.flaticon.com/512/318/318773.png'
+  alt="Tela de Notificações"
+  style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
+/>
+<br />
+<img
+  src='https://cdn-icons-png.flaticon.com/512/12355/12355835.png'
+  alt="Tela de Notificações"
+  style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
+/>
+<br />
+<img
+  src='https://cdn-icons-png.flaticon.com/512/318/318777.png'
+  alt="Tela de Notificações"
+  style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
+/>
+<br />
+<img
+  src='https://cdn-icons-png.flaticon.com/512/152/152510.png'
+  alt="Tela de Notificações"
+  style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
+/>
+<br />
+<img
+  src='https://cdn-icons-png.flaticon.com/512/142/142306.png'
+  alt="Tela de Notificações"
+  style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}
+/>
+<br />
+
+E o código:
+
+```js
+// MainScreen.js
+import { Text,View,Image,StyleSheet,TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+
+const imagensDados = {
+    0: require('../assets/images/dados_00.png'),
+    1: require('../assets/images/dados_01.png'),
+    2: require('../assets/images/dados_02.png'),
+    3: require('../assets/images/dados_03.png'),
+    4: require('../assets/images/dados_04.png'),
+    5: require('../assets/images/dados_05.png'),
+    6: require('../assets/images/dados_06.png'),
+  };
+  
+
+export function MainScreen(){
+    // Estado para guardar o número do dado atualmente exibido.
+  // Começa mostrando a face 1 do dado.
+  const [faceAtualDado, setFaceAtualDado] = useState(0);
+
+  // Função para "rolar" o dado
+  const rolarDado = () => {
+    // Gera um número aleatório entre 1 e 6
+    const numeroSorteado = Math.floor(Math.random() * 6) + 1;
+    setFaceAtualDado(numeroSorteado);
+  };
+    return (
+        <View style={estilos.container}>
+            <Image source={imagensDados[faceAtualDado]} style={estilos.image}/>
+            <TouchableOpacity style={estilos.botaoContainer} onPress={rolarDado}>
+                <Text style={estilos.botaoTexto}>Rolar!</Text>
+            </TouchableOpacity>
+        </View>
+    );
+}
+
+
+
+const estilos = StyleSheet.create(
+    {
+        container:{
+            flex: 1,
+            backgroundColor: '#ececec',
+            justifyContent: 'space-evenly',
+            alignContent: 'center',
+            alignItems: 'center'
+        },
+        image:{
+            height:'80%',
+            width:'80%',
+            resizeMode: 'contain',
+            padding:4,
+            borderRadius: '35%',
+            overflow:'hidden',
+        },
+        botaoContainer:{
+            backgroundColor: '#007bff',
+            width: '80%',
+            paddingVertical: 12,
+            paddingHorizontal: 25,
+            borderRadius: 8,
+            elevation: 2,
+            marginBottom: 15,
+        },
+        botaoTexto:{
+            fontSize: 20,
+            color: '#ececec',
+            fontWeight: 'bold',
+            textAlign: 'center',
+        },
+    }
+);
+```
 
