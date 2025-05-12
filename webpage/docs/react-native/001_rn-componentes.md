@@ -503,3 +503,13 @@ Vamos estudar a utilização de mais alguns hooks e componentes, mas vou deixar 
 <br />
 
 :::
+
+### 4.4 Sumarizando para a aplicação
+
+Apenas para fazer um fechamento, onde utilizamos este conceito todo dentro da nossa aplicação? Estamos utilizando o hook `useState()` para definir um valor inicial para o valor associado a lógica de troca de face sorteada do dado. Ele é inicializado com um tupla de dois valores:
+
+- **Variável:** quem vai armazenar o valor monitorado pelo Hook;
+- **Método para atualização da variável:** é o método que poderá ser chamado com a lógica da atualização do valor da variável. Quando ele é invocado e troca o valor da variável, os componentes de UI que utilizam ele são re-desenhados na tela.
+
+O valor enviado na função `useState()`, é o valor inicial que é atribuído a variável associada ao hook.
+
