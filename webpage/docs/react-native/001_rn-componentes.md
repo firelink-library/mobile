@@ -513,3 +513,7 @@ Apenas para fazer um fechamento, onde utilizamos este conceito todo dentro da no
 
 O valor enviado na função `useState()`, é o valor inicial que é atribuído a variável associada ao hook.
 
+### 4.5 Mais documentação oficial
+
+- [Using the State Hook](https://legacy.reactjs.org/docs/hooks-state.html)
+- [Built-in React Hooks](https://react.dev/reference/react/hooks)
