@@ -434,3 +434,72 @@ const estilos = StyleSheet.create(
 );
 ```
 
+Pessoal, aqui acredito que faz sentindo avaliarmos um pouco mais o conceito principal que faz nossa aplicação funcionar. O que temos aqui é a função `rolarDado()`, que faz duas tarefas muito importantes para o nosso aplicativo:
+
+- Sorteia um número aleatório entre 1 e 6, toda vez que ela é chamada;
+- Chama o *hook* `useState`, pela função `setFaceAtualDado()`, que faz com que nossa aplicação seja atualizada.
+
+O conceito da atualização aqui do ReactNative é o mesmo que do React em aplicações Web.
+
+## 4. Compreendendo Hooks e outros Eventos
+
+> "Aviso do Murilo aqui: essa nota vai ser longa."
+
+Pessoal a ideia desta seção é avaliarmos um pouco de onde vem esse negócio de *Hooks* e por que ele é tão importante no contexto de criação de uma aplicação. Primeiro vamos avaliar um pouco a nossa utilização do React (sim, Web, não o Native), para criação de soluções.
+
+### 4.1 Componentes como Classes
+
+Logo nas primeiras aplicações com React, os desenvolvedores utilizavam classes para representar seus componentes. Essa abordagem trazia algumas vantagens:
+
+- Era possível armazenar estado dentro de cada objeto: cada instância de uma classe era capaz de armazenar valores dentro dela! O que permitia gerenciar valores que poderiam mudar ao longo do tempo dentro da própria classe.
+- Existiam os chamados *Métodos de Ciclo de Vida*: os métodos de ciclo de vida são chamados de forma automática quando os eventos aconteciam com os componentes, como ele ser montado na tela (`componentDidMount`) e outros.
+
+> Poxa, mas se possuíamos essas vantagens, por que não continuamos utilizando elas para criar nossas aplicações?
+
+Porque eu falei apenas um lado desta moeda, ela com toda certeza tem mais um (esses aqui o Gemini me ajudou a sintetizar):
+
+- **Reutilização Lógica Statefult Difícil:** Compartilhar lógica com estado entre componentes era complicado. Padrões como Higher-Order Components (HOCs) e Render Props ajudavam, mas podiam levar ao que era conhecido como "Wrapper Hell" (um aninhamento excessivo de componentes no React DevTools, dificultando a depuração e a compreensão da árvore de componentes). Esses padrões muitas vezes alteravam a estrutura da árvore de componentes, o que não era ideal apenas para reutilizar comportamento.
+- **Lógica Espalhada em Métodos de Ciclo de Vida:** Código relacionado a uma única funcionalidade (como buscar dados) frequentemente ficava espalhado por diferentes métodos de ciclo de vida (componentDidMount para a busca inicial, componentDidUpdate para atualizar quando props mudam, componentWillUnmount para limpeza). Isso tornava o código mais difícil de ler e manter, pois a lógica coesa estava fragmentada.
+- **Complexidade do this em Classes:** O uso do this em JavaScript dentro de classes pode ser confuso, exigindo bind ou arrow functions para garantir que o contexto esteja correto em callbacks de eventos. Embora seja um detalhe da linguagem, era uma fonte comum de erros para desenvolvedores React.
+- **Classes Dificultam Otimizações (Potencialmente):** Embora o React seja eficiente, o modelo de classes adicionava uma certa sobrecarga na criação de instâncias e no gerenciamento interno que os componentes funcionais puros não tinham.
+
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/zbHDMJ60V78?si=_cDjgQnC_jj47Jxw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}></iframe>
+<br />
+
+### 4.2 Componentes Funcionais
+
+Pessoal, a programação orientada a objetos é um paradigma de programação. Quando pensamos em um paradigma, estamos falando de um conjunto de convenções colocadas em conjunto para facilitar a forma como representamos nossas lógicas como código. 
+
+:::note[Paradigmas de Programação]
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/hZzpNiSD0bg?si=DAQAG-LpvKRbVJH1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}></iframe>
+<br />
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/GGF9kaX24tA?si=oqfMy35P5jm2uuBX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}></iframe>
+<br />
+
+:::
+
+Muitos dos problemas que os programadores enfrentavam com os componentes como classes, estava no fato de lidar com o seu estado ou ainda quando precisavam compartilhar esse valor pela aplicação. Uma alternativa a esta abordagem, foi utilizar os componentes sem uma representação de estado, o que levou a criação dos componentes funcionais. No início, estes componentes eram limitados a apresentação (renderização) de alguma parte da UI, frente aos valores que recebiam.
+
+### 4.3 React Hooks
+
+A partir da versão **16.8** do React, as coisas mudaram. Foi adicionado um conjunto poderoso de recursos a biblioteca, que permitia lidar com estado dentro de componentes funcionais, os ***hooks***. Na documentação do React, podemos ver a descrição da implementação deste recurso. Sim é um link legado, mas sugiro fortemente a leitura: [link](https://legacy.reactjs.org/docs/hooks-overview.html).
+
+Hooks são funções JavaScript especiais que permitem que você "engate" (hook into) recursos de estado e ciclo de vida do React a partir de componentes de função. A palavra-chave aqui é "*a partir de componentes de função*". A ideia central é permitir a reutilização de lógica stateful sem alterar a hierarquia de componentes e agrupar a lógica relacionada em um só lugar (ao invés de espalhada pelos métodos de ciclo de vida). Existem algumas regras para utilização dos Hooks:
+
+- ***Chamar Hooks apenas no Top Level:*** Nunca chame Hooks dentro de loops, condicionais ou funções aninhadas. O React confia na ordem em que os Hooks são chamados para associar o estado e os efeitos corretos a cada chamada de Hook específica em uma renderização.
+- ***Chamar Hooks apenas de Funções React:*** Chame Hooks apenas de componentes de função React ou de seus próprios Hooks customizados.
+
+Vamos estudar a utilização de mais alguns hooks e componentes, mas vou deixar mais alguns vídeos para quem desejar conhecer mais sobre o conceito.
+
+:::note[Para saber mais sobre Hooks]
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/TNhaISOUy6Q?si=ienI-NB9WwQfWHxa" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}></iframe>
+<br />
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ORSHG3dfUrk?si=xq4oF9dpBSWANK0a" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}></iframe>
+<br />
+
+:::
