@@ -190,9 +190,59 @@ Aqui, o ponto diferente é que como instalamos bibliotecas externas, é uma boa 
 
 ## 3. Construindo mais telas para navegar
 
-Agora, vamos dentro do diretório `src\app\`, criar uma nova tela, que vamos chamar de segunda tela. Ela é uma tela que pode ser igual a primeira, mas com o texto dela indicando que é uma tela diferente:
+Agora, vamos dentro do diretório `src/app/`, criar uma nova tela, que vamos chamar de segunda tela. Ela é uma tela que pode ser igual a primeira, mas com o texto dela indicando que é uma tela diferente:
 
 ```js
+// Segunda tela
 
+import { StyleSheet, Text, View } from 'react-native';
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text>Minha Segunda Tela!</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 ```
+
+Já o código da nossa primeira tela:
+
+```js
+// index.js
+import { Link } from 'expo-router';
+import { StyleSheet, Text, View } from 'react-native';
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text>Minha Tela Inicial</Text>
+      <Link href={"/segunda_tela"}>Vai para segunda tela</Link>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+```
+
+> "Uoooo calma ai Murilão, que aconteceu aqui?"
+
+Pessoal vamos por partes e vamos avaliar o que está acontecendo neste ponto. Observando o código da tela dois, temos o mesmo código que o que estava na primeira tela. Mesmo que sem mudanças de código aqui, temos o funcionamento do ***Expo Router***, ele vai mapear todos os componentes dentro do diretório `/app` como rotas que possam ser acessadas. Para ver quais são as rotas disponíveis, podemos utilizar o comando:
+
 
