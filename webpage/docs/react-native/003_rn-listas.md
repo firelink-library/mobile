@@ -398,4 +398,260 @@ const styles = StyleSheet.create({
 });
 ```
 
-Pessoal quanto mais aumentarmos o número de vezes que vamos repetir esses elementos, maior será o tempo para visualizar nossa lista. Isso acontece pois o ScrollView renderiza todos os componentes de uma vez. 
+Pessoal quanto mais aumentarmos o número de vezes que vamos repetir esses elementos, maior será o tempo para visualizar nossa lista. Isso acontece pois o ScrollView renderiza todos os componentes de uma vez. Para não termos esse problema, vamos utilizar um outro componente para fazer essa renderização, o `FlatList`.
+
+## 2. FlatList
+
+O **FlatList** é um componente otimizado para renderizar listas de dados roláveis, de maneira eficiente e escalável, mesmo com centenas ou milhares de itens. Diferente do ScrollView, ele não renderiza todos os itens de uma vez — apenas os visíveis na tela (renderização preguiçosa).
+
+:::note[Lazy Rendering]
+
+Calma lá! Existe algo que é chamado de Renderização Preguiçosa e é bom?
+Sim! A estratégia do Lazy Loading ou Lazy Rendering, surgiu para lidar com o problema de recursos que não eram críticos para o funcionamento dos sistema e que poderiam ser carregados posteriormente. Em geral, ele é aplicado quando ocorre alguma interação com o usuário, como a navegação ou o escrolar de uma seção.
+
+Para saber mais: [Lazy loading](https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/Lazy_loading).
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/-zzmfjIiC3M?si=JX7w1BEb_JoEwo1N" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}></iframe>
+<br />
+:::
+
+Algumas vantagens em utilizar o **FlatList**:
+- Alto desempenho com listas grandes.
+- Rolagem suave com renderização incremental.
+- Suporte nativo para cabeçalhos, rodapés, separadores e pull-to-refresh.
+- Melhor gerenciamento de memória que ScrollView.
+
+Os componentes princípais (os props mais comuns) são:
+
+| Propriedade | Obrigatório | Descrição |
+| - | - | - |
+| **data** | Sim | Array com os dados que serão exibidos. |
+| **renderItem** | Sim | Função que renderiza cada item da lista. |
+| keyExtractor | Não | Função que retorna uma chave única por item (obrigatória para listas dinâmicas). Se você não fornecer um keyExtractor ao FlatList, o React Native ainda tentará gerar uma chave (key) automaticamente, usando o índice do item no array como fallback. |
+| ListHeaderComponent | Não | Componente opcional que aparece antes dos itens. |
+| ListFooterComponent | Não | Componente opcional que aparece depois dos itens. |
+| ItemSeparatorComponent | Não | Componente que aparece entre os itens. |
+| onEndReached | Não | Função chamada quando o usuário chega ao fim da lista (ótimo para paginação). |
+
+Agora, vamos pensar no projeto que acabamos de fazer. Vamos ajustar ele para que ele possa trabalhar com o **FlatList**.
+
+```js
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, FlatList } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Card from '../components/Card';
+
+const imagens = {
+    0: "https://images.pexels.com/photos/32056657/pexels-photo-32056657/free-photo-of-black-and-white-close-up-of-a-farm-cow.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    1: "https://images.pexels.com/photos/17572427/pexels-photo-17572427/free-photo-of-cow-with-bell.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    2: "https://images.pexels.com/photos/33550/cows-curious-cattle-agriculture.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    3: "https://images.pexels.com/photos/551624/pexels-photo-551624.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    4: "https://images.pexels.com/photos/30160395/pexels-photo-30160395/free-photo-of-close-up-portrait-of-a-brown-cow-in-green-pasture.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    5: "https://images.pexels.com/photos/31669033/pexels-photo-31669033/free-photo-of-tranquil-black-and-white-swans-on-a-lake.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    6: "https://images.pexels.com/photos/6771859/pexels-photo-6771859.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    7: "https://images.pexels.com/photos/17826916/pexels-photo-17826916/free-photo-of-swan-flying-above-a-lake.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    8: "https://images.pexels.com/photos/16386700/pexels-photo-16386700/free-photo-of-swans-swimming-in-the-lake.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+}
+
+export default function App() {
+    return (
+        <SafeAreaProvider>
+            <SafeAreaView style={styles.container}>
+                <FlatList
+                    data={Object.entries(imagens).map(([index, url]) => (
+                        url
+                    ))}
+                    renderItem={({item}) => (<Card imageUrl={item}/>)}
+                    ListHeaderComponent={
+                        <View>
+                            <Text style={styles.texto}>Header Da Lista</Text>
+                        </View>
+                    }
+                />
+            </SafeAreaView>
+        </SafeAreaProvider>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+    },
+    texto: {
+        fontSize: 42,
+        color: '#c4c4c4',
+        padding: 16,
+    }
+});
+```
+
+Aqui acho que vale destacar uma característica importante:
+- Os dados extraídos e enviados para `data` são apenas as URL das imagens;
+- Quando vamos manipular esses elementos, utilizamos eles como um objeto no contexto do `renderItem` para utilizar essa URL para exibir as informações para o usuário.
+
+Mesmo se alterarmos nosso projeto para que ele possa exibir diversos elementos, é possível ver que ele não tem mais aquele tempo de carregamento muito grande de diversas imagens na aplicação.
+
+```js
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, FlatList } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Card from '../components/Card';
+
+const imagens = {
+    0: "https://images.pexels.com/photos/32056657/pexels-photo-32056657/free-photo-of-black-and-white-close-up-of-a-farm-cow.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    1: "https://images.pexels.com/photos/17572427/pexels-photo-17572427/free-photo-of-cow-with-bell.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    2: "https://images.pexels.com/photos/33550/cows-curious-cattle-agriculture.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    3: "https://images.pexels.com/photos/551624/pexels-photo-551624.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    4: "https://images.pexels.com/photos/30160395/pexels-photo-30160395/free-photo-of-close-up-portrait-of-a-brown-cow-in-green-pasture.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    5: "https://images.pexels.com/photos/31669033/pexels-photo-31669033/free-photo-of-tranquil-black-and-white-swans-on-a-lake.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    6: "https://images.pexels.com/photos/6771859/pexels-photo-6771859.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    7: "https://images.pexels.com/photos/17826916/pexels-photo-17826916/free-photo-of-swan-flying-above-a-lake.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    8: "https://images.pexels.com/photos/16386700/pexels-photo-16386700/free-photo-of-swans-swimming-in-the-lake.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+}
+
+export default function App() {
+    return (
+        <SafeAreaProvider>
+            <SafeAreaView style={styles.container}>
+                <FlatList
+                    data={Array.from({ length: 100 }).map((_, i) =>
+                        imagens[i % Object.keys(imagens).length]
+                    )}
+                    renderItem={({item}) => (<Card imageUrl={item}/>)}
+                    ListHeaderComponent={
+                        <View>
+                            <Text style={styles.texto}>Header Da Lista</Text>
+                        </View>
+                    }
+                />
+            </SafeAreaView>
+        </SafeAreaProvider>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+    },
+    texto: {
+        fontSize: 42,
+        color: '#c4c4c4',
+        padding: 16,
+    }
+});
+```
+
+Maravilha! Agora nós temos uma página que consegue exibir diversos elementos! Mas e se for necessário enviar dados de uma página para outra? Vamos verificar como implementar esse comportamento!
+
+## 3. Enviando dados de uma página para outra
+
+Aqui ainda estamos no mesmo aplicativo, mas agora, vamos tentar ajustar ele para exibir nosso nome da tela inicial para a tela seguinte. Sim, é simples, mas vamos utilizar esse conceito nos nossos próximos projetos.
+
+Primeiro, vamos trocar em nossa aplicação tudo do `app/index.js`, para a tela `app/lista.js`. Vamos construir uma primeira tela que recebe como dados o nome do usuário e seu cavaleito do zodiaco favorito (eu estava já meio sem criatividade, ai foi o que eu consegui pensar). Vamos ver como fazer o envio destes dados. A princípio, a `app/lista.js` está igual, vamos modificar ela posteriormente.
+
+Para isso, vamos adicionar um componente para o nosso sistema, o `Picker`. Para instalar ele, vamos utilizar:
+
+```sh
+npx expo install @react-native-picker/picker
+```
+
+Maiores informações sobre a biblioteca podem ser vistas [aqui](https://github.com/react-native-picker/picker). Vamos adicionar ele e o primeiro método que vamos mandar os dados para a nossa segunda tela. Para isso vamos avaliar o código abaixo:
+
+```js
+import { StyleSheet, Text, View, SafeAreaView, TextInput, Pressable, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import React from 'react';
+import { Picker } from '@react-native-picker/picker';
+import { useRouter } from 'expo-router';
+
+function chamarSegundaTela(texto, valorSelecionado){
+    // Pega o router
+    const router = useRouter();
+    if (texto.trim() === '') {
+      Alert.alert('Campo obrigatório', 'Por favor, preencha o campo.');
+    } else {
+      // Envia o app para a próxima tela
+      router.push({pathname:"/lista", params:{nome:texto, cavaleiro:valorSelecionado}});
+    }
+}
+
+export default function App() {
+    const [texto, onChangeTexto] = React.useState('');
+    const [valorSelecionado, setValorSelecionado] = React.useState('');
+    return (
+        <SafeAreaProvider>
+            <SafeAreaView style={styles.container}>
+                <View>
+                    <Text style={styles.texto}>Dados do Usuário</Text>
+                    <TextInput
+                        value={texto}
+                        placeholder='Informe seu nome'
+                        onChangeText={onChangeTexto}
+                        style={styles.input}
+                    />
+                    
+                    <Picker
+                        selectedValue={valorSelecionado}
+                        onValueChange={(itemValue, itemIndex) => {
+                            setValorSelecionado(itemValue);
+                        }}>
+                        <Picker.Item label="Áries" value="Mu" />
+                        <Picker.Item label="Touro" value="Aldebaran" />
+                        <Picker.Item label="Gêmeos" value="Saga" />
+                        <Picker.Item label="Câncer" value="Máscara da Morte" />
+                        <Picker.Item label="Leão" value="Aiolia" />
+                        <Picker.Item label="Virgem" value="Shaka" />
+                        <Picker.Item label="Libra" value="Dohko" />
+                        <Picker.Item label="Escorpião" value="Milo" />
+                        <Picker.Item label="Sagitário" value="Aiolos" />
+                        <Picker.Item label="Capricórnio" value="Shura" />
+                        <Picker.Item label="Aquário" value="Camus" />
+                        <Picker.Item label="Peixes" value="Afrodite" />
+                    </Picker>
+
+                    <TouchableOpacity style={styles.botao} onPress={()=>chamarSegundaTela(texto, valorSelecionado)}>
+                        <Text style={styles.textoBotao}>Enviar Os Dados</Text>
+                    </TouchableOpacity>
+                </View>
+            </SafeAreaView>
+        </SafeAreaProvider>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        paddingVertical: '20',
+    },
+    texto: {
+        fontSize: 42,
+        color: '#c4c4c4',
+        padding: 16,
+    },
+    input: {
+        height: 40,
+        margin: 12,
+        borderWidth: 1,
+        padding: 10,
+    },
+    botao: {
+        padding: 8,
+        margin: 10,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: '#f0f0f0',
+        backgroundColor: '#797979',
+        borderRadius: 20,
+    },
+    textoBotao: {
+        fontSize: 24,
+        color: '#c4c4c4',
+        padding: 16,
+    },
+});
+```
+
+
