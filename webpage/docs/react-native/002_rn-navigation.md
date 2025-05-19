@@ -249,6 +249,314 @@ Agora vamos trabalhar um pouco mais com esse contexto e vamos ver nossa aplicaç
 
 ## 4. Mais telas e mais componentes
 
-- TODO
+Legal pessoal, até aqui temos nosso `expo-router` instalado e configurado, vimos como fazer a navegação utilizando o componente Link. Mas e o que mais o `expo-router` nos deixa fazer? Vamos explorar um pouco mais a [documentação](https://docs.expo.dev/router/introduction/) do pacote.
+
+Lendo a documentação, existem alguns comportamentos principais que devemos levar em consideração:
+- **Todas as telas e páginas estão dentro do diretório `app`**: Todas as rotas para as páginas da aplicação existem dentro deste diretório. Diretórios podem ser utilizados para apresentar páginas agrupadas;
+- **Todas as páginas tem um URL**: Todas as páginas da aplicação possuem um endereço e podem ser acessadas por esta URL. Existe suporte para o [*universal deep-linking*](https://docs.expo.dev/linking/overview/).
+- **O primeiro index.tsx ou index.js será o ponto de entrada da aplicação**: Com o `expo-router`, não indicamos um local específico para ser o ponto de entrada da aplicação. Ele será o arquivo index.(js ou tsx) que aparecer mais próximo do caminho `/`. Isso pode ser um arquivo na raiz `/app/index.js` ou ainda dentro de algum outro elemento, como um conjunto de tabs `/app/(tabs)/index.tsx`.
+- **Toda a lógica de inicialização da aplicação vai dentro do _layout.js ou _layout.tsx**: Toda a lógica de inicialização que antes acontecia dentro do `App.js`, agora deve ser executada neste arquivo `_ layout.tsx` ou `_layout.js`. Isso deve acontecer pois esse arquivo é carregado antes de qualquer outra rota sa aplicação.
+- **Todos os demais componentes que não forem telas, devem existir fora do diretório `/app`**: O expo vai tratar todos os elementos dentro de `/app` como uma rota que precisa estar acessível. Manter os arquivos dos demais componentes fora deste diretório. Uma alternativa é utilizar a estrutura `/src`, com os diretórios dentro dele, como `/src/app`, `/src/components` e assim por diante. O expo vai buscar os elementos dentro do diretório.
+- **O `expo-router` é o `react-navigation` com mais funcionalidades, mas ainda é ele**: Isso significa que as práticas e recomendações para o `react-navigation` continuam valendo aqui também.
+
+:::tip[Guia Expo-Router]
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ci0tuIAAvTY?si=g3l62XSSjA4gLngV" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}></iframe>
+<br />
+
+:::
+
+> "Murilão legal, mas e como vamos utilizar esses caras ai? Da para gente desenvolver um exemplo mais robusto? Não leva a mal não, mas duas telas até o meu gato faz, e olha que ele nem coda..."
+
+OOOOOOoooooooo calma lá jovem ☕️. Você não está errado neste ponto, mas vamos avançando juntos e com calma, para cada parte do que fizermos continuar fazendo sentindo!
+
+Vamos analisar a estrutura do nosso projeto. Temos o `/src/app`. Dentro dele, temos duas telas, a `index.js` e a `segunda_tela.js`. Por enquanto, a troca de telas é realizada utilizando o componente `Link`. Vamos ajustar esses elementos!
+
+Primeiro, vamos criar um diretório `/app/components` e dentro dele, vamos criar dois componentes: `botao.js` e `card.js`. Vamos analisar o código destes componentes:
 
 
+```js
+// src/components/botao.js
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+
+export default function Botao( {title, onPress, style} ) {
+  return (
+    <TouchableOpacity
+      accessibilityRole="button"
+      accessibilityLabel={title ?? ''}
+      style={[styles.button, style]}
+      activeOpacity={0.7}
+      onPress={onPress}
+    >
+      <Text style={styles.label}>{title}</Text>
+    </TouchableOpacity>
+  );
+}
+
+const styles = StyleSheet.create({
+  button: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 24,
+    backgroundColor: '#5568FE',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 2,          // sombra Android
+    shadowColor: '#000',   // sombra iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    width:'80%',
+    marginVertical: 8,
+  },
+  label: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+});
+
+```
+
+Importante para observarmos deste código:
+- Esse componente precisa de três (3) atributos para ser instanciado, um texto, uma função de callback e uma personalização de estilo.
+- Realizamos algumas verificações no atributo texto antes de utilizar ele.
+
+Beleza, agora ajustar nosso código do card. Primeiro, vamos instalar o pacote [`expo-linear-gradient`](https://docs.expo.dev/versions/latest/sdk/linear-gradient/), para construirmos degrades nas nossas aplicações:
+
+```sh
+# Dentro do diretório da solução
+npx expo install expo-linear-gradient
+```
+
+Agora para o código do nosso card:
+
+```js
+// src/components/card.js
+// components/Card.js
+import React, { useMemo } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
+/** Paleta base — pegue quantas cores quiser */
+const PALETTE = [
+  '#FF7A59', '#FFB05C', '#FFE074',
+  '#4FACFE', '#38F9D7',
+  '#A18CD1', '#FBC2EB',
+  '#667EEA', '#764BA2',
+];
+
+/** Gera duas cores distintas aleatórias */
+function getRandomGradient() {
+  const idx1 = Math.floor(Math.random() * PALETTE.length);
+  let idx2 = Math.floor(Math.random() * PALETTE.length);
+  // garante cores diferentes
+  while (idx2 === idx1) idx2 = Math.floor(Math.random() * PALETTE.length);
+  return [PALETTE[idx1], PALETTE[idx2]];
+}
+
+export default function Card({ children, style }) {
+  // memoiza para não trocar de cor a cada re-render
+  const colors = useMemo(getRandomGradient, []);
+
+  return (
+    <LinearGradient colors={colors} style={[styles.container, style]}>
+      <Text style={styles.text}>{children}</Text>
+    </LinearGradient>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    width: '90%',
+    height: '50%',
+    borderRadius: 16,
+    padding: 20,
+    marginVertical: 10,
+    alignSelf: 'center',
+    // sombra Android
+    elevation: 3,
+    // sombra iOS
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  text: {
+    fontSize: 18,
+    color: '#fff',
+    fontWeight: '600',
+  },
+});
+
+```
+
+Para observar:
+- A utilização da função `useMemo()` para não trocar o elemento que foi sorteado para a aplicação.
+- O texto que for enviado ao componente é exibido dentro do componente `Text`.
+
+Beleza, agora temos os dois componentes prontos. Mas antes de avançarmos, vamos verificar se eles estão funcionando. Vamos alterar o código do `index.js` para verificar se eles estão funcionando. O código pode ser observado abaixo:
+
+```js
+// /src/app/index.js
+import { Link } from 'expo-router';
+import { StyleSheet, Text, View } from 'react-native';
+import Botao from '../components/botao';
+import Card from '../components/card';
+
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Text>Minha Tela Inicial</Text>
+      <Link href={"/segunda_tela"}>Vai para segunda tela</Link>
+      <Botao title="Segunda Tela" />
+      <Card>Card na Tela 1</Card>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
+```
+
+Legal, agora vamos ajustar o código para a primeira tela utilizar o layout definido primeiro pelo arquivo `_layout.js`:
+
+```js
+// /src/app/_layout.js
+import { Stack } from 'expo-router';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+
+/**
+ * Root layout do diretório `/src/app/`.
+ * – Envolve toda a aplicação com `SafeAreaProvider`.
+ * – Cria uma Stack sem cabeçalhos/títulos.
+ */
+export default function RootLayout() {
+  return (
+    <SafeAreaProvider>
+        <SafeAreaView style={{flex:1}}>
+            <Stack
+                screenOptions={{
+                headerShown: false,   // oculta completamente o header
+                // Se preferir manter o header mas sem título:
+                //   headerTitle: '',
+                }}
+            />
+      </SafeAreaView>
+    </SafeAreaProvider>
+  );
+}
+```
+
+Pessoal, varias coisas acontecendo aqui. O primeiro ponto é compreender o conceito do `SafeAreaProvider` e `SafeAreaView`. Esses elementos funcionam em conjunto para evitar que elementos do celular possam interferir com a interface. O conjunto faz com que o elemento `SafeAreaView` sempre receba a informação de contexto de forma correta. Como estes elementos estão sendo informados no `_layout.js`, todos as telas que não fizerem uma redefinição de layout, vão utilizar esse comportamento.
+
+Agora, vamos analisar o componente `Stack`. Ele vai ser responsável por permitir que as telas possam ser empilhadas. Assim, quando utilizarmos a ação de voltar do iOS ou apertar o botão voltar no Android. Aqui um ponto a se observar: estamos configurando o comportamento da barra de navegação.
+
+:::tip[Mais opções do Stack]
+
+Para saber mais elementos de configuração do Stack, verificar a sua [documentação](https://docs.expo.dev/router/basics/layout/).
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/izZv6a99Roo?si=DH2ynOyVkYiaWYkl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}></iframe>
+<br />
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/lPc0FdHXmZo?si=6XT7YhaB7psnQCJ_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}></iframe>
+<br />
+
+:::
+
+Vamos editar agora o `/src/app/index.js`:
+
+```js
+// src/app/index.js
+import { router } from 'expo-router';
+import { StyleSheet, Text, View } from 'react-native';
+import Botao from '../components/botao';
+
+function vaiParaSegundaTela(){
+  return router.navigate('/segunda_tela');
+}
+
+function vaiParaUol(){
+  return router.navigate('https://uol.com.br');
+}
+
+function chamarUber(){
+  return router.navigate('uber://riderequest')
+}
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <View style={styles.containerHeader}>
+        <Text style={styles.header}>Minha Tela Inicial</Text>
+      </View>
+      <Botao title="Vai para Segunda Tela" onPress={vaiParaSegundaTela}/>
+      <Botao title="Vai para o site do UOL" onPress={vaiParaUol}/>
+      <Botao title="Chama o Uber" onPress={chamarUber}/>
+      <Botao title="Vai para tela com abas"/>
+
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+  },
+  containerHeader:{
+    backgroundColor:'#eee1e4',
+    width:'100%',
+    marginBottom: 24,
+  },
+  header: {
+      fontSize: 32,                      // tamanho grande
+      fontWeight: '700',                 // negrito moderado
+      color: '#262B40',
+      paddingHorizontal: 16,             // respiro lateral
+      paddingVertical: 12,
+      letterSpacing: 0.5,                // leve espaçamento entre letras
+      textAlign: 'center',               // centralizar (opcional)
+  },
+});
+
+```
+
+Aqui estamos utilizando o nosso componente `Botao` para navegar para diferentes partes do App. Para maiores detalhes da documentação do DeepLink do Uber, consultar a [documentação](https://developer.uber.com/docs/riders/ride-requests/tutorials/deep-links/introduction#universal-deep-links).
+
+A nossa segunda tela, vai apenas exibir nosso cartão.
+
+```js
+// /src/app/segunda_tela.js
+
+import { StyleSheet, Text, View } from 'react-native';
+import Card from '../components/card';
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Card>Ola Tela 2!</Card>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+```
+
+Agora vamos trabalhar com nossa tela com tab navigation. Para isso, vamos criar o diretório `(logica)`, dentro do `app`. Ele vai possuir duas telas, a `home.js` e a `config.js`. 
