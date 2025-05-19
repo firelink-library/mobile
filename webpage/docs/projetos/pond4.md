@@ -27,6 +27,13 @@ O objetivo deste projeto é realizar a implementação de um aplicativo que trag
 - Ele deve seguir algum *design system* comercial ([Google Material Design](https://m3.material.io/), [HIG Apple](https://developer.apple.com/design/human-interface-guidelines), [Fluent Microsoft](https://fluent2.microsoft.design/));
 - A aplicação deve ser entregue na plataforma Github;
 - Ela deve interagir com uma API (essa não precisa ser implementada, pode-se utilizar a interação com ela mocada - [Fakerjs](https://fakerjs.dev/) ou [`{JSON} Placeholder`](https://jsonplaceholder.typicode.com/));
+
+:::note[Sugestão de Server para os Dados]
+
+Pessoal deixo aqui uma sugestão para utilizar a API Rest para os testes: [Json-Server](https://firelink-library.github.io/tools/json-server).
+
+:::
+
 - Na tela de exibição de produtos, ela deve necessáriamente exibir 10000 itens (o objetivo principal aqui é verificar qual estratégia de paginação vocês estão utilizando);
 - Deve ser possível utilizar a camera do dispositivo;
 - Deve ser possível compartilhar imagens com a aplicação;
