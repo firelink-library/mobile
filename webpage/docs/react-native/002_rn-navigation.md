@@ -243,6 +243,12 @@ const styles = StyleSheet.create({
 
 > "Uoooo calma ai Murilão, que aconteceu aqui?"
 
-Pessoal vamos por partes e vamos avaliar o que está acontecendo neste ponto. Observando o código da tela dois, temos o mesmo código que o que estava na primeira tela. Mesmo que sem mudanças de código aqui, temos o funcionamento do ***Expo Router***, ele vai mapear todos os componentes dentro do diretório `/app` como rotas que possam ser acessadas. Para ver quais são as rotas disponíveis, podemos utilizar o comando:
+Pessoal vamos por partes e vamos avaliar o que está acontecendo neste ponto. Observando o código da tela dois, temos o mesmo código que o que estava na primeira tela. Mesmo que sem mudanças de código aqui, temos o funcionamento do ***Expo Router***, ele vai mapear todos os componentes dentro do diretório `/app` como rotas que possam ser acessadas. 
+
+Agora vamos trabalhar um pouco mais com esse contexto e vamos ver nossa aplicação crescer um pouco em complexidade.
+
+## 4. Mais telas e mais componentes
+
+- TODO
 
 

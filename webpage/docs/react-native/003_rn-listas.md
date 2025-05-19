@@ -560,15 +560,14 @@ npx expo install @react-native-picker/picker
 Maiores informações sobre a biblioteca podem ser vistas [aqui](https://github.com/react-native-picker/picker). Vamos adicionar ele e o primeiro método que vamos mandar os dados para a nossa segunda tela. Para isso vamos avaliar o código abaixo:
 
 ```js
+// app/index.js
 import { StyleSheet, Text, View, SafeAreaView, TextInput, Pressable, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import React from 'react';
 import { Picker } from '@react-native-picker/picker';
-import { useRouter } from 'expo-router';
+import { router } from 'expo-router';
 
 function chamarSegundaTela(texto, valorSelecionado){
-    // Pega o router
-    const router = useRouter();
     if (texto.trim() === '') {
       Alert.alert('Campo obrigatório', 'Por favor, preencha o campo.');
     } else {
@@ -654,4 +653,93 @@ const styles = StyleSheet.create({
 });
 ```
 
+Antes de avançarmos para o código da nossa segunda tela, vamos compreender o que está acontecendo aqui:
 
+- **router**: o `router` permite que a navegação entre as telas ocorra. Utilizando `router.push({ pathname:'/lista', params:{...} })`, que permite navegação declarativa e passagem de parâmetros via query string. Lembrando que o **expo-router** utiliza *file-based* para construção da sua lógica de páginas, assim como o Next.js.
+- **Hooks de Estado**: 	`React.useState('')` para estado controlado de TextInput e Picker. Assim, quando algo for alterado na UI, vai ser refletido nestes elementos. Existe também uma validação mínima no campo TextInput.
+- **Binding bidirecional**: Com o Picker, a alteração do estado muda o valor que está sendo exibido e representado por ele.
+- **Envio de parâmetros para outra tela**: Quando a segunda tela é invocada, são enviados para ela tanto o valor do TextInput quanto o que está selecionado no Picker.
+
+Agora vamos para a segunda tela:
+
+```js
+//app/lista.js
+
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, FlatList, TouchableOpacity } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import Card from '../components/Card';
+import { router, useLocalSearchParams } from 'expo-router';
+
+const imagens = {
+    0: "https://images.pexels.com/photos/32056657/pexels-photo-32056657/free-photo-of-black-and-white-close-up-of-a-farm-cow.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    1: "https://images.pexels.com/photos/17572427/pexels-photo-17572427/free-photo-of-cow-with-bell.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    2: "https://images.pexels.com/photos/33550/cows-curious-cattle-agriculture.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    3: "https://images.pexels.com/photos/551624/pexels-photo-551624.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    4: "https://images.pexels.com/photos/30160395/pexels-photo-30160395/free-photo-of-close-up-portrait-of-a-brown-cow-in-green-pasture.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    5: "https://images.pexels.com/photos/31669033/pexels-photo-31669033/free-photo-of-tranquil-black-and-white-swans-on-a-lake.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    6: "https://images.pexels.com/photos/6771859/pexels-photo-6771859.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    7: "https://images.pexels.com/photos/17826916/pexels-photo-17826916/free-photo-of-swan-flying-above-a-lake.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    8: "https://images.pexels.com/photos/16386700/pexels-photo-16386700/free-photo-of-swans-swimming-in-the-lake.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+}
+
+export default function Lista() {
+    // Pega os valores enviados
+    const {nome, cavaleiro} = useLocalSearchParams(); 
+    return (
+        <SafeAreaProvider>
+            <SafeAreaView style={styles.container}>
+                <Text>Bem vindo {nome}! Seu cavaleiro é {cavaleiro}</Text>
+                <TouchableOpacity style={styles.botao} onPress={()=>{router.back()}}>
+                    <Text style={styles.textoBotao}>Voltar</Text>
+                </TouchableOpacity>
+                <FlatList
+                    data={Array.from({ length: 100 }).map((_, i) =>
+                        imagens[i % Object.keys(imagens).length]
+                    )}
+                    renderItem={({item}) => (<Card imageUrl={item}/>)}
+                    ListHeaderComponent={
+                        <View>
+                            <Text style={styles.texto}>Header Da Lista</Text>
+                        </View>
+                    }
+                />
+            </SafeAreaView>
+        </SafeAreaProvider>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+    },
+    texto: {
+        fontSize: 42,
+        color: '#c4c4c4',
+        padding: 16,
+    },
+    botao: {
+        width: "80%",
+        padding: 8,
+        margin: 10,
+        borderWidth: StyleSheet.hairlineWidth,
+        borderColor: '#f0f0f0',
+        backgroundColor: '#797979',
+        borderRadius: 20,
+    },
+    textoBotao: {
+        fontSize: 24,
+        color: '#c4c4c4',
+        padding: 16,
+    },
+});
+
+```
+
+Como principais pontos para destacar aqui:
+
+- **Recebendo parâmetros**: recebemos os dados vindo de outra página com: `const { nome, cavaleiro } = useLocalSearchParams();`, assim, mantemos o componente autônomo, sem [*prop drilling*](https://www.freecodecamp.org/news/prop-drilling-in-react-explained-with-examples/). Importante destacar que todos os valores chegam como string, sendo necessário converter se precisar de número/boolean.
+- **Navegação de Retorno**: No iOS, não temos um botão de voltar. O `router.back()`, volta para a última tela antes da chamada.
+
+Pessoal, com isso temos a nossa exibição por listas e a passagem de parâmetros entre telas. Espero que o material tenha ajudado vocês a compreender como podemos utilizar esses elementos em nossos projetos com React Native.
