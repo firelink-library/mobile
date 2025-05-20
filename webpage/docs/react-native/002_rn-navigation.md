@@ -560,3 +560,195 @@ const styles = StyleSheet.create({
 ```
 
 Agora vamos trabalhar com nossa tela com tab navigation. Para isso, vamos criar o diretório `logica/(tabs)`, dentro do `app`. Ele vai possuir duas telas, a `home.js` e a `config.js`. 
+Primeiro vamos alterar a lógica do nosso index.js para que ele possa nos levar para a tela com as tabs.
+
+```js
+// src/app/index.js
+
+import { router } from 'expo-router';
+import { StyleSheet, Text, View } from 'react-native';
+import Botao from '../components/botao';
+
+function vaiParaSegundaTela(){
+  return router.navigate('/segunda_tela');
+}
+
+function vaiParaUol(){
+  return router.navigate('https://uol.com.br');
+}
+
+function chamarUber(){
+  return router.navigate('uber://riderequest')
+}
+
+function vaiParaTabs(){
+  return router.navigate('/logica/home')
+}
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <View style={styles.containerHeader}>
+        <Text style={styles.header}>Minha Tela Inicial</Text>
+      </View>
+      <Botao title="Vai para Segunda Tela" onPress={vaiParaSegundaTela}/>
+      <Botao title="Vai para o site do UOL" onPress={vaiParaUol}/>
+      <Botao title="Chama o Uber" onPress={chamarUber}/>
+      <Botao title="Vai para tela com abas" onPress={vaiParaTabs}/>
+
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+  },
+  containerHeader:{
+    backgroundColor:'#eee1e4',
+    width:'100%',
+    marginBottom: 24,
+  },
+  header: {
+      fontSize: 32,                      // tamanho grande
+      fontWeight: '700',                 // negrito moderado
+      color: '#262B40',
+      paddingHorizontal: 16,             // respiro lateral
+      paddingVertical: 12,
+      letterSpacing: 0.5,                // leve espaçamento entre letras
+      textAlign: 'center',               // centralizar (opcional)
+  },
+});
+
+```
+:::tip[router.navigate()]
+
+Pessoal existe um detalhe importante no comportamento do `router.navigate()`. Ele é um poderoso alias para o `router.push()`, portanto ele empilha as telas para nós. Mas por que ele é poderoso? Porque ele não faz só isso, ele vai permitir que uma tela não seja carregada múltiplas vezes na pilha, se você navegou para a própria dela. Também é capaz de realizar o desempilhar, para deixar o fluxo de navegação correto. 
+
+O `router.replace()` vai trocar o fluxo atual de navegação. Como uma tabela de resumo:
+
+| Cenário                                                       | Melhor opção                                               | Por quê                                             |
+| ------------------------------------------------------------- | ---------------------------------------------------------- | --------------------------------------------------- |
+| **Login concluído** → ir para Home e impedir retorno ao Login | `router.replace('/home')`                                  | O usuário não deve voltar ao `/login`.              |
+| Link de menu lateral “Home” clicado múltiplas vezes           | `router.navigate('/home')`                                 | Garante que só exista **uma** instância de `/home`. |
+| Abrir detalhes de item (pode voltar à lista)                  | `router.push('/item/42')`                                  | Precisa empilhar, não substituir.                   |
+| Redirecionar `/` para aba padrão de um grupo de tabs em `index.js`:         |  `<Redirect href="/home" />` (ou `navigate`) | Quer manter histórico, mas evitar tela vazia.       |
+
+
+:::
+
+Agora para o nosso grupo de tabs, vamos ter a seguinte estrutura de pastas:
+
+```sh
+/src
+  |
+  -- /app
+      |
+      --/logica
+          |
+          --(tabs)
+              |
+              --_layout.js
+              --config.js
+              --home.js
+```
+
+É importante perceber aqui que o `/src/app/logica/{tabs}/_layout.js` vai dizer como será o layout destes elementos. Ele vai devolver para a nossa aplicação o comportamento de navegação utilizando abas.
+
+```js
+// /src/app/logica/{tabs}/_layout.js
+
+import { Tabs } from 'expo-router';
+import { FontAwesome } from '@expo/vector-icons';
+
+export default function TabsLayout() {
+  return (
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: '#5568FE',
+      }}
+    >
+      <Tabs.Screen
+        name="home"
+        options={{ title: 'Home' , tabBarIcon: (()=> <FontAwesome name="home"/>)}}
+      />
+      <Tabs.Screen
+        name="config"
+        options={{ title: 'Config', tabBarIcon: (()=> <FontAwesome name="gear"/>) }}
+      />
+    </Tabs>
+  );
+}
+
+```
+
+Aqui vale destacar algumas cosias:
+- O `FontAwesome` vem por padrão com o Expo, podemos utilizar seus icones e fontes;
+- Configuramos o comportamento das elementos que serão exibidos dentro de cada uma das abas.
+
+Agora para as páginas em si:
+
+```js
+// /src/app/logica/{tabs}/home.js
+
+import { StyleSheet, Text, View } from 'react-native';
+import Card from '../../../components/card';
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Card>Home</Card>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
+```
+
+<br />
+
+```js
+// /src/app/logica/{tabs}/home.js
+
+import { StyleSheet, Text, View } from 'react-native';
+import Card from '../../../components/card';
+
+
+export default function App() {
+  return (
+    <View style={styles.container}>
+      <Card>Configuração</Card>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
+```
+
+Agora temos nossa navegação configurada.
+
+:::tip[Para saber mais estilos de navegação]
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/BElPB4Ai3j0?si=-gjTEi58d-P-kbSs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{ display: 'block', marginLeft: 'auto', maxHeight: '40vh', marginRight: 'auto', marginBottom: '24px' }}></iframe>
+<br />
+
+:::
