@@ -752,3 +752,5 @@ Agora temos nossa navegação configurada.
 <br />
 
 :::
+
+Pessoal essa foi uma introdução ao desenvolvimento de diferentes tipos de layout. Espero que vocês continuem com o estudo e possam trazer mais variações ☕️📱.
