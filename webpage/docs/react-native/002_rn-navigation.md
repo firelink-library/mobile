@@ -559,4 +559,4 @@ const styles = StyleSheet.create({
 });
 ```
 
-Agora vamos trabalhar com nossa tela com tab navigation. Para isso, vamos criar o diretório `(logica)`, dentro do `app`. Ele vai possuir duas telas, a `home.js` e a `config.js`. 
+Agora vamos trabalhar com nossa tela com tab navigation. Para isso, vamos criar o diretório `logica/(tabs)`, dentro do `app`. Ele vai possuir duas telas, a `home.js` e a `config.js`. 
