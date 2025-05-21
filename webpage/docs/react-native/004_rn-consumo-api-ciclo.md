@@ -222,7 +222,226 @@ Vamos conseguir acessar essas rotas da seguinte maneira:
 curl -X GET http://localhost:4000/hist
 ```
 
-Pessoal aqui temos um ponto interessante a observar: 
+Pessoal aqui temos um ponto interessante a observar na documentação do [Json-Server](https://github.com/typicode/json-server), as rotas da API Rest que ele disponibiliza para a aplicação, conseguimos fazer o nosso servidor fornecer os arquivos estáticos também.
+
+Eles serão fornecidos, por padrão de um diretório `./public` dentro do local onde o servidor está sendo executado. O que vamos fazer aqui é criar um diretório chamado `/images` e fornecer as imagens da nossa aplicação ali. Vamos adicionar esses endereços em nossos endpoints.
+
+```json
+{
+    "hist": {
+        "origem": "O macarrão é uma obra-prima derivada da farinha de trigo e a sua história nada mais do que o caminho trilhado por muitos anos durante os quais foram se agregando muitas sabedorias. Vamos chamá-la de “a rota do macarrão”. A história do trigo se inicia na Mesopotâmia (atualmente Irã) há 7 mil anos, quando o cultivo foi desenvolvido e de onde se espalhou para o resto do mundo. Dizem que, a partir do trigo, o pão se desenvolveu na Europa enquanto o macarrão se desenvolvia na Ásia, principalmente na China. No Japão, o macarrão é citado em um documento que data da Era Kamakura (1185-1333). A história do lámen japonês começa em 1910, durante a Era Meiji, ano em que o restaurante “RaiRai Ken” abriu as portas em Asakusa, bairro de Tokyo. Esse restaurante de comida chinesa incluiu em seu cardápio o “Shinasoba (macarrão chinês)”, que consistia de um macarrão fino e comprido, dentro de um caldo leve à base de shoyu (molho de soja). Esse prato que dizem ter dado origem ao lámen, era completado com fatias finas de châshû (lombinho de porco), fatias de naruto (pasta curtida à base de peixe) e cebolinha picada. O nome, no entanto, só surgiria mais tarde, em 1922, na cidade de Sapporo, província de Hokkaido, depois que um restaurante simples de nome “Takeya” abriu as portas. Mais tarde, o estabelecimento mudou de escrita e passou a se chamar “Restaurante Chinês Takeya”. Dizem que Tatsu, a esposa de Masaharu Ohkubo, o dono do estabelecimento, gostava muito das retrucadas que o funcionário chinês bradava da cozinha, “haoliao (está pronto)” e daí batizou o prato de “liao-men (men — macarrão — do liao)” e que na pronúncia japonesa se transformou em “ramen” ou “lamen”.",
+        "imagem": "/images/lamen-geral.png",
+        "video": "https://youtu.be/PE6tQ5QUU_E?si=D23mIEGbYpkZKnWB"
+    },
+    "items": [
+        {
+            "id": "1",
+            "nome": "Tokyo Ramen",
+            "preco": 14.50,
+            "descricao": "Caldo cremoso de porco (tonkotsu) com macarrão, chashu, ovo cozido e cebolinha.",
+            "imagem": "/images/tokyo-ramen.png"
+        },
+        {
+            "id": "2",
+            "nome": "Miso Ramen",
+            "preco": 13.00,
+            "descricao": "Caldo à base de pasta de soja (miso) com macarrão, legumes e carne de porco.",
+            "imagem": "/images/miso-ramen.png"
+        },
+        {
+            "id": "3",
+            "nome": "Shoyu Ramen",
+            "preco": 12.50,
+            "descricao": "Caldo leve de soja (shoyu) com macarrão, camarão, brotos de bambu e nori.",
+            "imagem": "/images/shoyu-ramen.png"
+        },
+        {
+            "id": "4",
+            "nome": "Gyoza",
+            "preco": 8.00,
+            "descricao": "Pastéis recheados de carne de porco e vegetais, servidos com molho ponzu.",
+            "imagem": "/images/gyoza.png"
+        },
+        {
+            "id": "5",
+            "nome": "Ebi Tempura",
+            "preco": 18.00,
+            "descricao": "Camarões empanados e fritos em massa leve, acompanhados de molho tentsuyu.",
+            "imagem": "/images/ebi-tempura"
+        },
+        {
+            "id": "6",
+            "nome": "Yakisoba",
+            "preco": 11.50,
+            "descricao": "Macarrão frito com legumes, frango e molho agridoce.",
+            "imagem": "/images/yakisoba.png"
+        },
+        {
+            "id": "7",
+            "nome": "Katsu Don",
+            "preco": 16.00,
+            "descricao": "Tonkatsu (lombo de porco empanado) servido sobre arroz com ovo e cebola.",
+            "imagem": "/images/katsu-don.png"
+        },
+        {
+            "id": "8",
+            "nome": "Unagi Don",
+            "preco": 25.00,
+            "descricao": "Máscara de enguia grelhada com molho kabayaki sobre arroz japonês.",
+            "imagem": "/images/unagi-don.png"
+        },
+        {
+            "id": "9",
+            "nome": "Sushi Misto",
+            "preco": 30.00,
+            "descricao": "Seleção de nigiris e sashimis variados, servidos com wasabi e gengibre em conserva.",
+            "imagem": "/images/sushi-misto.png"
+        },
+        {
+            "id": "10",
+            "nome": "Uramaki de Salmão",
+            "preco": 22.00,
+            "descricao": "Enrolado de arroz por fora, recheado com salmão, abacate e cream cheese.",
+            "imagem": "/images/urumaki-salmao.png"
+        },
+        {
+            "id": "11",
+            "nome": "Temaki de Atum",
+            "preco": 9.50,
+            "descricao": "Cone de alga nori recheado com arroz, atum fresco e cebolinha.",
+            "imagem": "/images/temaki-atum.png"
+        },
+        {
+            "id": "12",
+            "nome": "Sashimi de Salmão",
+            "preco": 28.00,
+            "descricao": "Fatias finas de salmão fresco, servidas com molho shoyu e wasabi.",
+            "imagem": "/images/sashimi-salmao.png"
+        },
+        {
+            "id": "13",
+            "nome": "Sunomono",
+            "preco": 7.00,
+            "descricao": "Salada agridoce de pepino japonês com kani e gergelim.",
+            "imagem": "/images/sunomono.png"
+        },
+        {
+            "id": "14",
+            "nome": "Okonomiyaki",
+            "preco": 15.50,
+            "descricao": "Panqueca salgada japonesa com repolho, bacon, molho e maionese.",
+            "imagem": "/images/okonomiyaki.png"
+        },
+        {
+            "id": "15",
+            "nome": "Chawanmushi",
+            "preco": 9.00,
+            "descricao": "Flan salgado de ovo no vapor com pedaços de frango e cogumelos.",
+            "imagem": "/images/chawanmushi.png"
+        }
+    ],
+    "pedidos": [
+        {
+            "id":"1",
+            "mesa":1,
+            "items":[
+                {
+                    "item_id":1, 
+                    "quantidade":2
+                }
+            ]
+        },
+        {
+            "id":"2",
+            "mesa":12,
+            "items":[
+                {
+                    "item_id":2, 
+                    "quantidade":1
+                },
+                {
+                    "item_id":1, 
+                    "quantidade":1
+                }
+            ]
+        }
+    ]
+}
+```
+
+O que fizemos aqui foi só ajustar o endereço dos recursos das imagens. Agora vamos trabalhar com nossa aplicação.
+
+## 3. Início da Construção da Aplicação
+
+Agora vamos iniciar o desenvolvimento da nossa aplicação. Primeiro, vamos criar o diretório `/src` e o `/src/app` dentro dele para iniciarmos nosso desenvolvimento. Vamos ajustar o `app.json` e o `package.json` para alterar o ponto de entrada da nossa aplicação.
+
+- `package.json`:
+
+```json
+{
+  "name": "lamen-menu",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "expo": "~53.0.8",
+    "expo-status-bar": "~2.2.3",
+    "react": "19.0.0",
+    "react-native": "0.79.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0"
+  },
+  "private": true
+}
+```
+
+- `app.json`:
+
+```json
+{
+  "expo": {
+    "name": "lamen-menu",
+    "slug": "lamen-menu",
+    "scheme": "meuapp.lamen.menu",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
+```
+
+Show, agora vamos pensar na estrutura de diretórios para estruturar nossas rotas da aplicação. Primeiro vamos criar nosso layout base dentro do `/src/app/_layout.js`:
+
+```js
+// /src/app/_layout.js
+
+```
 
 ## Referências
 
