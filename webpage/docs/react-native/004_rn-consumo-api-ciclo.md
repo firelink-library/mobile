@@ -440,8 +440,85 @@ Show, agora vamos pensar na estrutura de diretórios para estruturar nossas rota
 
 ```js
 // /src/app/_layout.js
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import { Stack } from "expo-router";
+import { CustomHeader } from '../components/CustomHeader';
+
+export default function LayoutBase() {
+    return (
+        <SafeAreaProvider>
+            <SafeAreaView style={{ 
+                flex: 1,
+                backgroundColor: '#fc7a17' }}>
+                <Stack screenOptions={{
+                    // Define a cor de fundo do header
+                    headerStyle: {
+                        backgroundColor: '#FFA07A', // laranja claro
+                    },
+                    // Remove o título padrão (opcional)
+                    headerTitle: '',
+                    // Renderiza seu componente customizado no lugar do header
+                    header: (props) => <CustomHeader {...props} />,
+                }}>
+                    <Stack.Screen name="index" options={{title:"Bem Vindo"}}/>
+                </Stack>
+            </SafeAreaView>
+        </SafeAreaProvider>
+    );
+}
+```
+
+Aqui temos algumas mudanças que fizemos em relação a outros `_layout.js` que produzimos. Estamos utilizando o `SafeAreaProvider` e o `SafeAreaView` para evitar pontos não vísiveis da tela e o `Stack` para trazer a nossa navegação. Agora, configuramos a `Stack` de uma forma um pouco diferente, na propriedade `screenOptions`, estamos definindo como desejamos que nossa pilha de telas se comporte. Definimos qual a cor do fundo, que por padrão os nomes das rotas não são utilizadas como título pela stack e que o Header é implementado por um component customizado nosso, o `CustomHeader`.
+
+O `CustomHeader` está em `/src/components/CustomHeader.js`, lembrando que todos os arquivos que estiverem dentro do diretório `app` possuiem uma rota associada a ele, portanto componentes não devem ficar neste diretório quanto estamos utilizando nosso `expo-router`. Vamos ver esse componente agora:
+
+```js
+// /src/components/CustomHeader.js
+// components/CustomHeader.js
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+
+export function CustomHeader({ navigation, route, options, back }) {
+  return (
+    <View style={styles.container}>
+      {back ? (
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={styles.backButton}>‹ Voltar</Text>
+        </TouchableOpacity>
+      ) : null}
+      <Text style={styles.title}>
+        {options.title ?? route.name}
+      </Text>
+      {/* Você pode adicionar botões, ícones, avatar etc. */}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    height: 56,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    // Garanta que coincida com o headerStyle do Stack
+    backgroundColor: '#FFA07A',
+  },
+  backButton: {
+    fontSize: 18,
+    color: '#fff',
+    marginRight: 12,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+});
 
 ```
+
+Aqui podemos destacar que recebemos com o `props` alguns atributos que são verificados para a construção de todos os elementos na tela. O primeiro que vale destacar é o botão de **voltar**, que só será exibido quando o `Stack` informar que ele existe. Repare que utilizamos um ternário do JavaScript para verificar se o componente existe, para descidir se retornamos ou não o nosso botão de voltar customizado.
+
+Vamos ajustar agora nossa aplicação principal para que ela possa iniciar o pedido e trazer informações sobre lamen (tela de história).
 
 ## Referências
 
