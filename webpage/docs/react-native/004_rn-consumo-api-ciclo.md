@@ -518,7 +518,651 @@ const styles = StyleSheet.create({
 
 Aqui podemos destacar que recebemos com o `props` alguns atributos que são verificados para a construção de todos os elementos na tela. O primeiro que vale destacar é o botão de **voltar**, que só será exibido quando o `Stack` informar que ele existe. Repare que utilizamos um ternário do JavaScript para verificar se o componente existe, para descidir se retornamos ou não o nosso botão de voltar customizado.
 
-Vamos ajustar agora nossa aplicação principal para que ela possa iniciar o pedido e trazer informações sobre lamen (tela de história).
+Vamos ajustar agora nossa aplicação principal para que ela possa iniciar o pedido e trazer informações sobre lamen (tela de história). Nosso objetivo aqui vai ser colocar os botões que vão colocar nossa aplicação indo para a página de sobre e para página principal.
+
+```js
+// src/app/index.js
+
+import { Text, StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import { Botao } from '../components/Botao';
+import { router } from 'expo-router';
+
+function mudarParaInfo(){
+    router.navigate("/info")
+}
+
+function mudarParaHome(){
+    router.navigate("/home/items");
+}
+
+export default function TelaPrincipal() {
+    return (
+        <View style={estilo.fundoContainer}>
+            <Image source={require("../../assets/images/lamen-logo.png")} resizeMode='cover' style={{width:'100%', height:'60%'}}/>
+            <Botao texto={"Iniciar"} funcao={mudarParaHome}/>
+            <Botao texto={"Sobre"} funcao={mudarParaInfo}/>
+        </View>
+    );
+}
+
+const estilo = StyleSheet.create(
+    {
+        fundoContainer: {
+            backgroundColor: '#fa883c',
+            flex: 1,
+            padding: 16,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+    }
+);
+```
+
+E o nosso componente botão:
+
+```js
+// src/components/Botao.js
+import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
+
+export function Botao({texto, funcao}) {
+    return (
+            <TouchableOpacity style={estilo.botao} onPress={funcao?? null}>
+                <Text style={estilo.textoBotao}>{texto}</Text>
+            </TouchableOpacity>
+    );
+}
+
+const estilo = StyleSheet.create(
+    {
+        botao: {
+            width: "80%",
+            padding: 8,
+            margin: 10,
+            borderWidth: StyleSheet.hairlineWidth,
+            borderColor: '#f0f0f0',
+            backgroundColor: '#693c3f',
+            borderRadius: 20,
+        },
+        textoBotao: {
+            fontSize: 24,
+            color: '#c4c4c4',
+            padding: 16,
+            textAlign: 'center',
+        },
+    }
+);
+```
+
+Maravilha! Nossa navegação já está funcionando! Ainda levamos um erro quando vamos para essas telas, uma vez que elas ainda não existem!
+Vamos ajustar isso!! Primeiro, vamos compreender como cada parte desta lógica vai funcionar. Primeiro vamos fazer a tela sobre buscando as informações do servidor.
+
+> "Calma ai Murilão! Será que isso não vai trazer uma sobrecarga desnecessária para a aplicação?"
+
+Você tem um ponto interessante aqui. Estamos fazendo uma troca aqui, uma vez que vamos pegar as informações por uma rota do servidor, qualquer mudança, será realizada no backend. Isso faz com que as informações do aplicativo possam ser alteradas, sem ter que trocar a versão do aplicativo. É desta vantagem que estamos interessados! Vamos trabalhar com esse paradigma!
+
+Primeiro vamos deixar nosso servidor funcionando para servir as informações:
+
+```sh
+npx json-server -p 3000 dados.json
+```
+
+Ahh para exibirmos nosso vídeo no aplicativo, vamos instalar o navegador dentro do nosso aplicativo, para isso:
+
+```sh
+# Instalar no diretório da nossa solução
+npx expo install expo-web-browser
+```
+
+Agora, nossa exibição vai ficar:
+
+```js
+// src/app/info.js
+
+import React, { useEffect, useState } from 'react';
+import { 
+  View, 
+  Text, 
+  Image, 
+  ScrollView, 
+  StyleSheet, 
+  TouchableOpacity, 
+  ActivityIndicator 
+} from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
+
+const meuServer = 'http://10.128.0.171:4000'
+
+export default function Sobre() {
+  const [hist, setHist] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    async function fetchHist() {
+      try {
+        const res = await fetch(`${meuServer}/hist`); // ← ajuste para sua URL
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        setHist(json);
+      } catch (e) {
+        setError(e.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchHist();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+  if (error) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.error}>Erro: {error}</Text>
+      </View>
+    );
+  }
+  if (!hist) {
+  return (
+    <View style={styles.center}>
+      <Text style={styles.error}>Nenhum dado disponível</Text>
+    </View>
+  );
+}
+  console.log(`error: ${error} loading: ${loading} hist: ${hist}`)
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      {/* Imagem */}
+      <Image 
+        source={{ uri: `${meuServer}${hist.imagem}` }} 
+        style={styles.image} 
+        resizeMode="cover"
+      />
+
+      {/* Texto */}
+      <Text style={styles.text}>
+        {hist.origem}
+      </Text>
+
+      {/* Botão para abrir vídeo */}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => WebBrowser.openBrowserAsync(hist.video)}
+      >
+        <Text style={styles.buttonText}>Ver vídeo sobre a história</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    backgroundColor: '#fff',
+  },
+  center: {
+    flex: 1, 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  error: {
+    color: 'red',
+  },
+  image: {
+    width: '100%', 
+    height: 200, 
+    borderRadius: 8, 
+    marginBottom: 16,
+    backgroundColor: '#eee',
+  },
+  text: {
+    fontSize: 16,
+    lineHeight: 24,
+    color: '#333',
+    marginBottom: 24,
+  },
+  button: {
+    backgroundColor: '#FFA07A', // mesmo laranja do header
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+  },
+});
+```
+
+Beleza! Temos que ajustar nossa página do `_layout.js`:
+
+```js
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
+import { Stack } from "expo-router";
+import { CustomHeader } from '../components/CustomHeader';
+
+export default function LayoutBase() {
+    return (
+        <SafeAreaProvider>
+            <SafeAreaView style={{ 
+                flex: 1,
+                backgroundColor: '#fc7a17' }}>
+                <Stack screenOptions={{
+                    // Define a cor de fundo do header
+                    headerStyle: {
+                        backgroundColor: '#fc7a17', // laranja claro
+                    },
+                    // Remove o título padrão (opcional)
+                    headerTitle: '',
+                    // Renderiza seu componente customizado no lugar do header
+                    header: (props) => <CustomHeader {...props} />,
+                }}>
+                    <Stack.Screen name="index" options={{title:"Bem Vindo"}}/>
+                    <Stack.Screen name="info" options={{title: "História do Lamen"}} />
+                </Stack>
+            </SafeAreaView>
+        </SafeAreaProvider>
+    );
+}
+```
+
+Beleza, agora vamos para nosso menu de navegação com os items 🍜.
+
+## 4. Menu com os items
+
+Nosso menu será exibido com uma navegação no formato de `Tab`, assim o usuário vai conseguir ver seu pedido e também as opções. Nossa página de exibição de items vai ficar com o seguinte formato:
+
+```js
+// app/lamens.js
+import React, { useEffect, useState } from 'react';
+import {
+    View,
+    Text,
+    Image,
+    FlatList,
+    StyleSheet,
+    ActivityIndicator,
+    SafeAreaView,
+    TouchableOpacity,
+} from 'react-native';
+
+const SERVER = 'http://10.128.0.171:4000';
+
+export default function Lamens() {
+    const [items, setItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        async function fetchItems() {
+            try {
+                const res = await fetch(`${SERVER}/items`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const json = await res.json();
+                setItems(json);
+            } catch (e) {
+                setError(e.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchItems();
+    }, []);
+
+    if (loading) {
+        return (
+            <View style={styles.center}>
+                <ActivityIndicator size="large" />
+            </View>
+        );
+    }
+    if (error) {
+        return (
+            <View style={styles.center}>
+                <Text style={styles.error}>Erro: {error}</Text>
+            </View>
+        );
+    }
+    if (!items) {
+        return (
+            <View style={styles.center}>
+                <Text style={styles.error}>Nenhum dado disponível</Text>
+            </View>
+        );
+    }
+
+    const renderCard = ({ item }) => (
+        <View style={styles.card}>
+            <Image
+                source={{ uri: `${SERVER}${item.imagem}` }}
+                style={styles.image}
+                resizeMode="cover"
+            />
+            <View style={styles.info}>
+                <Text style={styles.title}>{item.nome}</Text>
+                <Text style={styles.description}>{item.descricao}</Text>
+                <Text style={styles.price}>R$ {item.preco.toFixed(2)}</Text>
+            </View>
+            {/* Exemplo de botão caso queira ação no card */}
+            <TouchableOpacity style={styles.button} onPress={() => {/* ação */ }}>
+                <Text style={styles.buttonText}>Detalhes</Text>
+            </TouchableOpacity>
+        </View>
+    );
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <FlatList
+                data={items}
+                keyExtractor={(item) => item.id}
+                renderItem={renderCard}
+                contentContainerStyle={styles.list}
+                showsVerticalScrollIndicator={false}
+            />
+        </SafeAreaView>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    list: {
+        padding: 16,
+    },
+    center: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    error: {
+        color: 'red',
+    },
+    card: {
+        backgroundColor: '#fafafa',
+        borderRadius: 8,
+        marginBottom: 16,
+        overflow: 'hidden',
+        // sombra (iOS)
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        // sombra (Android)
+        elevation: 3,
+    },
+    image: {
+        width: '100%',
+        height: 150,
+        backgroundColor: '#eee',
+    },
+    info: {
+        padding: 12,
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: '600',
+        marginBottom: 4,
+        color: '#333',
+    },
+    description: {
+        fontSize: 14,
+        lineHeight: 20,
+        color: '#666',
+        marginBottom: 8,
+    },
+    price: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#FFA07A', // laranja do header
+    },
+    button: {
+        backgroundColor: '#FFA07A',
+        paddingVertical: 10,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 14,
+        fontWeight: '500',
+    },
+});
+```
+
+Agora vamos precisar ajustar o layout para exibir corretamente os items e um modal para exibir seus detalhes. Adicionando o Modal.
+
+```js
+// app/lamens.js
+import React, { useEffect, useState } from 'react';
+import {
+    View,
+    Text,
+    Image,
+    FlatList,
+    StyleSheet,
+    ActivityIndicator,
+    SafeAreaView,
+    TouchableOpacity,
+    Modal
+} from 'react-native';
+
+const SERVER = 'http://10.128.0.171:4000';
+
+export default function Lamens() {
+    const [items, setItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    // Novo estado para modal
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+
+    useEffect(() => {
+        async function fetchItems() {
+            try {
+                const res = await fetch(`${SERVER}/items`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const json = await res.json();
+                setItems(json);
+            } catch (e) {
+                setError(e.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchItems();
+    }, []);
+
+    if (loading) {
+        return (
+            <View style={styles.center}>
+                <ActivityIndicator size="large" />
+            </View>
+        );
+    }
+    if (error) {
+        return (
+            <View style={styles.center}>
+                <Text style={styles.error}>Erro: {error}</Text>
+            </View>
+        );
+    }
+    if (!items) {
+        return (
+            <View style={styles.center}>
+                <Text style={styles.error}>Nenhum dado disponível</Text>
+            </View>
+        );
+    }
+
+    const openModal = (item) => {
+        setSelectedItem(item);
+        setModalVisible(true);
+    };
+
+    const renderCard = ({ item }) => (
+        <TouchableOpacity onPress={() => openModal(item)}>
+            <View style={styles.card}>
+                <Image
+                    source={{ uri: `${SERVER}${item.imagem}` }}
+                    style={styles.image}
+                    resizeMode="cover"
+                />
+                <View style={styles.info}>
+                    <Text style={styles.title}>{item.nome}</Text>
+                    <Text style={styles.price}>R$ {item.preco.toFixed(2)}</Text>
+                </View>
+            </View>
+        </TouchableOpacity>
+    );
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <FlatList
+                data={items}
+                keyExtractor={(item) => item.id}
+                renderItem={renderCard}
+                contentContainerStyle={styles.list}
+                showsVerticalScrollIndicator={false}
+            />
+
+            {/* Modal de detalhes */}
+            <Modal
+                visible={modalVisible}
+                transparent
+                animationType="slide"
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        {selectedItem && (
+                            <>
+                                <Image
+                                    source={{ uri: `${SERVER}${selectedItem.imagem}` }}
+                                    style={styles.modalImage}
+                                    resizeMode="cover"
+                                />
+                                <Text style={styles.modalTitle}>{selectedItem.nome}</Text>
+                                <Text style={styles.modalDescription}>
+                                    {selectedItem.descricao}
+                                </Text>
+                                <Text style={styles.modalPrice}>
+                                    R$ {selectedItem.preco.toFixed(2)}
+                                </Text>
+                            </>
+                        )}
+                        <TouchableOpacity
+                            style={styles.closeButton}
+                            onPress={() => setModalVisible(false)}
+                        >
+                            <Text style={styles.closeButtonText}>Fechar</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+        </SafeAreaView>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+    },
+    list: {
+        padding: 16,
+    },
+    center: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    error: {
+        color: 'red',
+    },
+    card: {
+        backgroundColor: '#fafafa',
+        borderRadius: 8,
+        marginBottom: 16,
+        overflow: 'hidden',
+        // sombra (iOS)
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        // sombra (Android)
+        elevation: 3,
+    },
+    image: {
+        width: '100%',
+        height: 150,
+        backgroundColor: '#eee',
+    },
+    info: {
+        padding: 12,
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: '600',
+        marginBottom: 4,
+        color: '#333',
+    },
+    description: {
+        fontSize: 14,
+        lineHeight: 20,
+        color: '#666',
+        marginBottom: 8,
+    },
+    price: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#FFA07A', // laranja do header
+    },
+    button: {
+        backgroundColor: '#FFA07A',
+        paddingVertical: 10,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 14,
+        fontWeight: '500',
+    },
+    /* Estilos do Modal */
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)', // fundo semitransparente
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalContent: {
+        width: '85%',
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        padding: 16,
+    },
+    modalImage: { width: '100%', height: 180, borderRadius: 4, marginBottom: 12 },
+    modalTitle: { fontSize: 20, fontWeight: '700', marginBottom: 8, color: '#333' },
+    modalDescription: { fontSize: 16, lineHeight: 22, color: '#555', marginBottom: 12 },
+    modalPrice: { fontSize: 18, fontWeight: 'bold', color: '#FFA07A', marginBottom: 16 },
+
+    closeButton: {
+        backgroundColor: '#FFA07A',
+        paddingVertical: 10,
+        borderRadius: 6,
+        alignItems: 'center',
+    },
+    closeButtonText: { color: '#fff', fontSize: 16, fontWeight: '500' },
+});
+
+```
+
 
 ## Referências
 
